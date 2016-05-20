@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.CorporationDAO">  
+
+    <resultMap type="Corporation" id="corporationMap">
+    	<result property="id"                 	column="id"                 	/>
+		<result property="name"                 column="name"                   />
+		<result property="shortName"            column="short_name"             />
+		<result property="eName"      			column="e_name"      			/>
+		<result property="areaId"               column="area_id"          		/>
+		<result property="createTime"           column="create_time"            />
+		<result property="lastUpdateTime"       column="last_update_time"       />
+		<result property="lastUpdateUserId"     column="last_update_user_id"    />
+    </resultMap>  
+    
+    <resultMap type="CorporationIntegrationMapping" id="corporationIntegrationMappingMap">
+    	<result property="id"                 	column="id"                 	/>
+		<result property="corporationId"       	column="corporation_id"         />
+		<result property="sourceId"            	column="source_id"              />
+		<result property="sourceCode"      		column="source_code"      		/>
+		<result property="dataSource"           column="data_source"            />
+    </resultMap>  
+    
+    <sql id="corporationColumn">
+    	cor.id,cor.name,cor.short_name,cor.e_name,
+    	cor.area_id,
+    	cor.create_time,cor.last_update_time,cor.last_update_user_id
+    </sql>
+    <sql id="corporationIntegrationMappingColumn">
+    	ic2s.id,
+        ic2s.corporation_id,
+        ic2s.source_id,
+        ic2s.source_code,
+        ic2s.data_source
+    </sql>
+    
+
+    <sql id="corporationMappingWhere">
+    	cor.name is not null
+    	<if test = "ids != null and ids.size() &gt; 0 ">
+            and cor.id in 
+            <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+            	cast( #{item} as uuid ) 
+            </foreach>
+         </if>
+    </sql>
+    <sql id="corporationPaging">
+    	<if test="limit != null and offset != null">
+    		limit #{limit} offset #{offset}
+    	</if>
+    </sql>
+    
+    
+    <sql id="corporationIntegrationMappingWhere">
+    	ic2s.source_id is not null
+    	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+            and ic2s.source_id in 
+            <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+    </sql>
+    
+    <insert id="insertCorporation" parameterType="Corporation">
+    	<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id" >
+            select uuid_generate_v4()
+        </selectKey>  
+        insert into corporation
+        (
+        	id,
+        	name,
+        	short_name,
+        	e_name,
+    		area_id,
+    		create_time,
+    		last_update_time,
+    		last_update_user_id
+        )
+        values
+        ( 
+        	cast( #{id} as uuid ),
+        	#{name},
+        	#{shortName},
+        	#{eName},
+        	#{areaId},
+        	#{createTime},
+        	#{lastUpdateTime},
+        	#{lastUpdateUserId}
+       	)
+    </insert>
+    
+    <insert id="insertCorporations" parameterType="java.util.List">
+        insert into corporation
+        (
+        	id,
+        	name,
+        	short_name,
+        	e_name,
+    		area_id,
+    		create_time,
+    		last_update_time,
+    		last_update_user_id
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	#{item.name},
+        	#{item.shortName},
+        	#{item.eName},
+        	#{item.areaId},
+        	#{item.createTime},
+        	#{item.lastUpdateTime},
+        	#{item.lastUpdateUserId}
+       	)
+       	</foreach>
+    </insert>
+    
+    <update id="updateCorporation" parameterType="Corporation">
+    	update 
+    		corporation
+    	set
+    		name                =  #{name},           
+        	short_name          =  #{shortName},      
+        	e_name              =  #{eName},          
+    		area_id             =  #{areaId},             
+    		last_update_time    =  #{lastUpdateTime}, 
+    		last_update_user_id =  #{lastUpdateUserId}
+		where id = cast( #{id} as uuid )
+    </update>
+    
+    <update id="updateCorporations" parameterType="java.util.List">
+    
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		corporation
+    	set
+    		name                =  #{item.name},           
+        	short_name          =  #{item.shortName},      
+        	e_name              =  #{item.eName},          
+    		area_id             =  #{item.areaId},             
+    		last_update_time    =  #{item.lastUpdateTime}, 
+    		last_update_user_id =  #{item.lastUpdateUserId}
+		where id = cast( #{item.id} as uuid )
+		</foreach>
+		
+    </update>
+    
+    <delete id="deleteCorporation" parameterType="java.util.List"> 
+    	delete from 
+    		corporation
+		where id in 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        	cast( #{item} as uuid )
+        </foreach>
+    </delete>
+    
+    <insert id="insertCorporationIntegrationMapping" parameterType="CorporationIntegrationMapping">
+    	<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id" >
+            select uuid_generate_v4()
+        </selectKey>  
+        insert into inter_corporation_2_source
+        (
+        	id,
+        	corporation_id,
+        	source_id,
+        	source_code,
+        	data_source
+        )
+        values
+        ( 
+        	cast( #{id} as uuid ),
+        	cast( #{corporationId} as uuid ),
+        	#{sourceId},
+        	#{sourceCode},
+        	#{dataSource}
+       	)
+    </insert>
+
+    <insert id="insertCorporationIntegrationMappings" useGeneratedKeys="true" parameterType="java.util.List">  
+        insert into inter_corporation_2_source
+        (
+        	id,
+        	corporation_id,
+        	source_id,
+        	source_code,
+        	data_source
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	cast( #{item.corporationId} as uuid ),
+        	#{item.sourceId},
+        	#{item.sourceCode},
+        	#{item.dataSource}
+       	)
+        </foreach>  
+    </insert>  
+
+  	<update id="updateCorporationIntegrationMapping" parameterType="CorporationIntegrationMapping">
+    	update 
+    		inter_corporation_2_source
+    	set
+    		source_code         = #{sourceCode},
+        	data_source         = #{dataSource}
+		where source_id = #{sourceId}
+    </update>
+    
+    <update id="updateCorporationIntegrationMappings" parameterType="java.util.List">
+    
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		inter_corporation_2_source
+    	set
+    		source_code         = #{item.sourceCode},
+        	data_source         = #{item.dataSource}
+		where source_id = #{item.sourceId}
+		</foreach>
+		
+    </update>
+    
+    <update id="updateMappingsCorporationId" parameterType="java.util.List">
+    
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		inter_corporation_2_source
+    	set
+    		corporation_id = cast( #{item.newCorporationId} as uuid )
+		where 
+			corporation_id = cast( #{item.oldCorporationId} as uuid )
+		</foreach>
+		
+    </update>
+    
+    <select id="countCorporationByDuplicateName" 
+    		parameterType="CorporationSearchParameters"  
+    		resultType="java.lang.Integer">
+    		
+    	select
+    		count(*)
+    	from 
+    		corporation cor
+		where 
+			name in 
+				(select name  from  corporation  group  by  name  having  count(name) > 1)
+			and 
+			<include refid="corporationMappingWhere"/>
+    </select>  
+    
+    <select id="selectCorporationByDuplicateName" 
+    		parameterType="CorporationSearchParameters"  
+    		resultMap="corporationMap">
+    		
+    	select
+    		<include refid="corporationColumn"/>
+    	from 
+    		corporation cor
+		where 
+			name in 
+				(select name  from  corporation  group  by  name  having  count(name) > 1)
+			and 
+			<include refid="corporationMappingWhere"/>
+		<include refid="corporationPaging"/>
+		order by name
+    </select>  
+    
+    <select id="selectCorporationIntegrationMapping" 
+    		parameterType="CorporationIntegrationMappingSearchParameters"  
+    		resultMap="corporationIntegrationMappingMap">
+		select 
+			<include refid="corporationIntegrationMappingColumn"/>
+		from 
+		    inter_corporation_2_source ic2s
+		where 
+			<include refid="corporationIntegrationMappingWhere"/>
+    </select>  
+</mapper>  
