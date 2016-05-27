@@ -9,13 +9,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
-import com.zhongzhou.Excavator.DAO.oracle.CorporationDAO;
+import com.zhongzhou.Excavator.DAO.oracle.NC.CorporationDAO;
 import com.zhongzhou.Excavator.model.NC.CorporationDoc;
 import com.zhongzhou.Excavator.model.NC.CorporationSearchParameters;
 import com.zhongzhou.Excavator.model.NC.ItemSearchParameters;
-import com.zhongzhou.Excavator.service.migration.NC.NCCorporationService;
-import com.zhongzhou.Excavator.service.migration.NC.NCItemCategoryService;
 import com.zhongzhou.Excavator.service.migration.NC.NCItemService;
+import com.zhongzhou.Excavator.springsupport.injectlist.ServiceNameList;
 
 public class NCItemTest {
 	private static XmlWebApplicationContext  context;
@@ -32,7 +31,7 @@ public class NCItemTest {
 			
 			context.refresh();
 			
-			ncItemService  = (NCItemService)context.getBean("NCItemService");	
+			ncItemService  = (NCItemService)context.getBean(ServiceNameList.MIGRATION_NC_ItemService);	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

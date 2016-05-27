@@ -1,6 +1,7 @@
 package com.zhongzhou.Excavator.service.impl.migration.NC;
 
 import java.sql.SQLException;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,19 +27,23 @@ import com.zhongzhou.Excavator.model.CorporationIntegrationMapping;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMappingSearchParameters;
 import com.zhongzhou.Excavator.model.NC.CorporationSearchParameters;
 import com.zhongzhou.Excavator.service.migration.NC.NCCorporationService;
+import com.zhongzhou.Excavator.springsupport.injectlist.DAOBeanNameList;
+
+import com.zhongzhou.Excavator.springsupport.injectlist.ServiceNameList;
+
 /**
  * @author Grry Zhang
  */
-@Service("NCCorporationService")
+@Service(ServiceNameList.MIGRATION_NC_CorporationService)
 public class CorporationServiceImpl implements NCCorporationService{
 
-	@Resource(name="oracle.CorporationDAO")
-	com.zhongzhou.Excavator.DAO.oracle.CorporationDAO ncCorporationDAO;
+	@Resource(name=DAOBeanNameList.oracle_nc_corporation)
+	com.zhongzhou.Excavator.DAO.oracle.NC.CorporationDAO ncCorporationDAO;
 	
-	@Resource(name="postgresql.CorporationDAO")
-	com.zhongzhou.Excavator.DAO.postgresql.CorporationDAO masterDataCorporationDAO;
+	@Resource(name=DAOBeanNameList.postgresql_md_corporation)
+	com.zhongzhou.Excavator.DAO.postgresql.MD.CorporationDAO masterDataCorporationDAO;
 	
-	@Resource(name="mongo.NCCorporationDAO")
+	@Resource(name=DAOBeanNameList.mongo_nc_corporation )
 	NCCorporationDAO  ncMongoCorporationDAO;
 	
 	private static int batchNumber = 100;
@@ -264,7 +269,7 @@ public class CorporationServiceImpl implements NCCorporationService{
 			throws SQLException{
 		
 		
-		List<Corporation> pendingClearCorporations = masterDataCorporationDAO.selectCorporationByDuplicateName( searchParameters );
+		List<Corporation> pendingClearCorporations = masterDataCorporationDAO.selectDuplicateNameCorporations( searchParameters );
 		
 		Queue<Corporation> pendingClearRecords = new LinkedList<Corporation>( pendingClearCorporations );
 		

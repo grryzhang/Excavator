@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
-import com.zhongzhou.Excavator.DAO.postgresql.CorporationDAO;
+import com.zhongzhou.Excavator.DAO.postgresql.MD.CorporationDAO;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMapping;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMappingSearchParameters;
 import com.zhongzhou.Excavator.model.NC.CorporationDoc;

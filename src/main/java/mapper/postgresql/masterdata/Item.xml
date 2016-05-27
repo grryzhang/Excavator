@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
   
-<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.ItemDAO">  
+<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.MD.ItemDAO">  
     
     <resultMap type="Item" id="itemMap">
 		<result property="id"              column="id"               />
@@ -42,7 +42,14 @@
 		<result property="sourceId"       column="source_id"    />
 		<result property="dataSource"     column="data_source"  />
 		<result property="sourceParentId" column="source_parent_id"  />
-    </resultMap>   
+    </resultMap>  
+    
+    <resultMap type="ItemUnitMapping" id="itemUnitMappingMap">
+    	<result property="id"             column="id"      />
+		<result property="itemUnitId"     column="item_unit_id"  />
+		<result property="sourceId"       column="source_id"    />
+		<result property="dataSource"     column="data_source"  />
+    </resultMap> 
     
     <sql id="itemColumn">
     	i.id, i.name,i.e_name,i.item_code,i.specification,
@@ -52,6 +59,21 @@
     <sql id="itemMappingColumn">
     	ii2s.id, ii2s.item_id, ii2s.source_id, ii2s.data_source
     </sql>
+        <sql id="itemCategoryMappingColumn">
+    	iic2s.id,iic2s.category_id,iic2s.source_id,iic2s.source_parent_id,
+    	iic2s.data_source  
+    </sql>
+    <sql id="itemCategoryColumn">
+    	ic.id, ic.name,ic.e_name,ic.description,
+    	ic.category_group,ic.level,ic.parent_id,ic.is_leaf,ic.tree_left_value,ic.tree_right_value,ic.status,
+    	ic.last_update_time
+    </sql>
+    <sql id="itemUnitMappingColumn">
+    	iiu2s.id,iiu2s.item_unit_id,iiu2s.source_id,iiu2s.data_source  
+    </sql>
+    
+    
+    
     <sql id="itemMappingWhere">
     	ii2s.source_id is not null
     	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
@@ -60,11 +82,6 @@
             	#{item}  
             </foreach>
          </if>
-    </sql>
-    <sql id="itemCategoryColumn">
-    	ic.id, ic.name,ic.e_name,ic.description,
-    	ic.category_group,ic.level,ic.parent_id,ic.is_leaf,ic.tree_left_value,ic.tree_right_value,ic.status,
-    	ic.last_update_time
     </sql>
     <sql id="itemCategoryWhere">
     	ic.id is not null
@@ -79,14 +96,19 @@
             </foreach>
          </if>
     </sql>
-    <sql id="itemCategoryMappingColumn">
-    	iic2s.id,iic2s.category_id,iic2s.source_id,iic2s.source_parent_id,
-    	iic2s.data_source  
-    </sql>
     <sql id="itemCategoryMappingWhere">
     	iic2s.source_id is not null
     	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
             and iic2s.source_id in 
+            <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+    </sql>
+    <sql id="itemUnitMappingWhere">
+    	iiu2s.source_id is not null
+    	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+            and iiu2s.source_id in 
             <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
             	#{item}  
             </foreach>
@@ -156,17 +178,6 @@
        	</foreach>
     </insert>
 
-    <select id="selectItemMappings" 
-    		parameterType="ItemSearchParameters"   
-    		resultMap="itemMappingMap">
-		select 
-			<include refid="itemMappingColumn"/>
-		from 
-			inter_item_2_source ii2s
-		where
-		<include refid="itemMappingWhere"/>
-    </select> 
-
 	<insert id="insertItemCategory" parameterType="ItemCategory">
 		update 
 			item_categorys 
@@ -233,7 +244,18 @@
     		e_name     = #{ename}
 		where id = #{id}
     </update>
-
+    
+    
+    <select id="selectItemMappings" 
+    		parameterType="ItemMappingSearchParameters"   
+    		resultMap="itemMappingMap">
+		select 
+			<include refid="itemMappingColumn"/>
+		from 
+			inter_item_2_source ii2s
+		where
+		<include refid="itemMappingWhere"/>
+    </select> 
 
     <select id="selectItemCategorys" 
     		parameterType="ItemCategorySearchParameters"   
@@ -261,4 +283,14 @@
 		<include refid="itemCategoryMappingWhere"/>
     </select> 
     
+    <select id="selectItemUnitMappings" 
+    		parameterType="ItemUnitMappingSearchParameters"   
+    		resultMap="itemUnitMappingMap">
+		select 
+			<include refid="itemUnitMappingColumn"/>
+		from 
+			inter_item_unit_2_source iiu2s
+		where
+		<include refid="itemUnitMappingWhere"/>
+    </select> 
 </mapper>  

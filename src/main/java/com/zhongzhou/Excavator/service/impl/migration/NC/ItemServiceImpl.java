@@ -22,19 +22,20 @@ import com.zhongzhou.Excavator.model.CorporationIntegrationMappingSearchParamete
 import com.zhongzhou.Excavator.model.ItemMapping;
 import com.zhongzhou.Excavator.model.Item;
 import com.zhongzhou.Excavator.model.NC.ItemSearchParameters;
-import com.zhongzhou.Excavator.service.migration.NC.NCCorporationService;
 import com.zhongzhou.Excavator.service.migration.NC.NCItemService;
+import com.zhongzhou.Excavator.springsupport.injectlist.DAOBeanNameList;
+import com.zhongzhou.Excavator.springsupport.injectlist.ServiceNameList;
 
-@Service("NCItemService")
+@Service(ServiceNameList.MIGRATION_NC_ItemService)
 public class ItemServiceImpl implements NCItemService{
 	
-	@Resource(name="oracle.ItemDAO")
-	com.zhongzhou.Excavator.DAO.oracle.ItemDAO ncItemDAO; 
+	@Resource(name=DAOBeanNameList.oracle_nc_item)
+	com.zhongzhou.Excavator.DAO.oracle.NC.ItemDAO ncItemDAO; 
 	
-	@Resource(name="postgresql.ItemDAO")
-	com.zhongzhou.Excavator.DAO.postgresql.ItemDAO itemDAO;
+	@Resource(name=DAOBeanNameList.postgresql_md_item )
+	com.zhongzhou.Excavator.DAO.postgresql.MD.ItemDAO itemDAO;
 	
-	@Resource( name="mongo.NCItemDAO" )
+	@Resource( name=DAOBeanNameList.mongo_nc_item )
 	NCItemDAO mongoNCItemDAO;
 	
 	private static int batchNumber = 200;

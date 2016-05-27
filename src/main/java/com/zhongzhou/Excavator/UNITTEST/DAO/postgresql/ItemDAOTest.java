@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
-import com.zhongzhou.Excavator.DAO.postgresql.ItemDAO;
+import com.zhongzhou.Excavator.DAO.postgresql.MD.ItemDAO;
 import com.zhongzhou.Excavator.model.ItemCategory;
 import com.zhongzhou.Excavator.model.ItemCategoryMapping;
 import com.zhongzhou.Excavator.model.ItemCategoryMappingSearchParameters;

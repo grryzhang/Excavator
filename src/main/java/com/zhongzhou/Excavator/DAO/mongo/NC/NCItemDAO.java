@@ -8,10 +8,13 @@ import javax.annotation.Resource;
 import org.mongodb.morphia.Datastore;
 import org.springframework.stereotype.Service;
 
-@Service( "mongo.NCItemDAO" )
+import com.zhongzhou.Excavator.springsupport.injectlist.DAOBeanNameList;
+import com.zhongzhou.Excavator.springsupport.injectlist.DataSourceList;
+
+@Service( DAOBeanNameList.mongo_nc_item )
 public class NCItemDAO {
 
-	@Resource(name="mongoMorphiaDataStore")
+	@Resource(name=DataSourceList.MONGO_MD_DOCUMENTS)
 	Datastore  mongoMorphiaDataStore;
 	
 	public void insertItem( com.zhongzhou.Excavator.model.NC.Item item ){
@@ -25,4 +28,3 @@ public class NCItemDAO {
 	}
 	
 }
-

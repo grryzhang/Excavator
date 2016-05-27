@@ -27,19 +27,37 @@
     			   type ="com.zhongzhou.Excavator.model.CorporationIntegrationMappingSearchParameters" />
     			   
     			       	
-    	<typeAlias alias="NC_ItemCategory"                     type="com.zhongzhou.Excavator.model.NC.ItemCategory" />
-    	<typeAlias alias="NC_ItemCategorySearchParameters"     type="com.zhongzhou.Excavator.model.NC.ItemCategorySearchParameters" />
-    	<typeAlias alias="ItemCategory"                		   type="com.zhongzhou.Excavator.model.ItemCategory" />
-    	<typeAlias alias="ItemCategorySearchParameters"        type="com.zhongzhou.Excavator.model.ItemCategorySearchParameters" />
-    	<typeAlias alias="ItemCategoryMapping"                 type="com.zhongzhou.Excavator.model.ItemCategoryMapping" />
-    	<typeAlias alias="ItemCategoryMappingSearchParameters" type="com.zhongzhou.Excavator.model.ItemCategoryMappingSearchParameters" />
+    	<typeAlias alias="NC_ItemCategory"                       type="com.zhongzhou.Excavator.model.NC.ItemCategory" />
+    	<typeAlias alias="NC_ItemCategorySearchParameters"       type="com.zhongzhou.Excavator.model.NC.ItemCategorySearchParameters" />
+    	<typeAlias alias="ItemCategory"                		     type="com.zhongzhou.Excavator.model.ItemCategory" />
+    	<typeAlias alias="ItemCategorySearchParameters"          type="com.zhongzhou.Excavator.model.ItemCategorySearchParameters" />
+    	<typeAlias alias="ItemCategoryMapping"                   type="com.zhongzhou.Excavator.model.ItemCategoryMapping" />
+    	<typeAlias alias="ItemCategoryMappingSearchParameters"   type="com.zhongzhou.Excavator.model.ItemCategoryMappingSearchParameters" />
     	
+    	<typeAlias alias="NC_Item"                      		type="com.zhongzhou.Excavator.model.NC.Item" />
+    	<typeAlias alias="NC_ItemSearchParameters"      		type="com.zhongzhou.Excavator.model.NC.ItemSearchParameters" />
+    	<typeAlias alias="Item"                         		type="com.zhongzhou.Excavator.model.Item" />
+    	<typeAlias alias="ItemSearchParameters"         		type="com.zhongzhou.Excavator.model.ItemSearchParameters" />
+    	<typeAlias alias="ItemMapping"                  		type="com.zhongzhou.Excavator.model.ItemMapping" />
+    	<typeAlias alias="ItemMappingSearchParameters"          type="com.zhongzhou.Excavator.model.ItemMappingSearchParameters" />
+    	<typeAlias alias="ItemUnit"             		        type="com.zhongzhou.Excavator.model.ItemUnit"                          />
+    	<typeAlias alias="ItemUnitMapping"                      type="com.zhongzhou.Excavator.model.ItemUnitMapping"                   />
+    	<typeAlias alias="ItemUnitMappingSearchParameters"      type="com.zhongzhou.Excavator.model.ItemUnitMappingSearchParameters"   />
     	
-    	<typeAlias alias="Item"                         type="com.zhongzhou.Excavator.model.Item" />
-    	<typeAlias alias="ItemSearchParameters"         type="com.zhongzhou.Excavator.model.ItemSearchParameters" />
-    	<typeAlias alias="ItemMapping"                  type="com.zhongzhou.Excavator.model.ItemMapping" />
-    	<typeAlias alias="NC_Item"                      type="com.zhongzhou.Excavator.model.NC.Item" />
-    	<typeAlias alias="NC_ItemSearchParameters"      type="com.zhongzhou.Excavator.model.NC.ItemSearchParameters" />
+    	<typeAlias alias="NC_Price"          		     		type="com.zhongzhou.Excavator.model.NC.Price"                       />
+    	<typeAlias alias="NC_PriceSearchParameters"      		type="com.zhongzhou.Excavator.model.NC.PriceSearchParameters"       />
+    	<typeAlias alias="NC_PriceCategory"              		type="com.zhongzhou.Excavator.model.NC.PriceCategory" 			     />
+    	<typeAlias alias="Price"             		     		type="com.zhongzhou.Excavator.model.Price" 					     />
+    	<typeAlias alias="PriceMapping"                  		type="com.zhongzhou.Excavator.model.PriceMapping" 				     />
+    	<typeAlias alias="PriceMappingSearchParameters"  		type="com.zhongzhou.Excavator.model.PriceMappingSearchParameters" 	 />
+    	<typeAlias alias="PriceCategory"                        type="com.zhongzhou.Excavator.model.PriceCategory" 			     />
+    	<typeAlias alias="PriceCategoryMapping"                 type="com.zhongzhou.Excavator.model.PriceCategoryMapping"           />
+    	<typeAlias alias="PriceCategoryMappingSearchParameters" type="com.zhongzhou.Excavator.model.PriceCategoryMapping"           />
+    	
+    	<typeAlias alias="Currency"             		        type="com.zhongzhou.Excavator.model.Currency"                          />
+    	<typeAlias alias="CurrencyMapping"                      type="com.zhongzhou.Excavator.model.CurrencyMapping"                   />
+    	<typeAlias alias="CurrencyMappingSearchParameters"      type="com.zhongzhou.Excavator.model.CurrencyMappingSearchParameters"   />
+    	
     </typeAliases> 
  
       
@@ -48,8 +66,11 @@
     <mappers>  
     	<mapper resource="mapper/oracle/NC/Corporation.xml" />
     	<mapper resource="mapper/oracle/NC/Item.xml" />
+    	<mapper resource="mapper/oracle/NC/Price.xml" />
     	
     	<mapper resource="mapper/postgresql/masterdata/Corporation.xml" />    
     	<mapper resource="mapper/postgresql/masterdata/Item.xml" />
+    	<mapper resource="mapper/postgresql/masterdata/Price.xml" />
+    	<mapper resource="mapper/postgresql/masterdata/Currency.xml" />
     </mappers>  
 </configuration>   

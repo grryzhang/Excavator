@@ -16,7 +16,7 @@ import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
-import com.zhongzhou.Excavator.DAO.oracle.ItemDAO;
+import com.zhongzhou.Excavator.DAO.oracle.NC.ItemDAO;
 import com.zhongzhou.Excavator.model.NC.Item;
 import com.zhongzhou.Excavator.model.NC.ItemCategory;
 import com.zhongzhou.Excavator.model.NC.ItemCategorySearchParameters;

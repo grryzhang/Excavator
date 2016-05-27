@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
-import com.zhongzhou.Excavator.DAO.oracle.CorporationDAO;
+import com.zhongzhou.Excavator.DAO.oracle.NC.CorporationDAO;
 import com.zhongzhou.Excavator.model.NC.CorporationDoc;
 import com.zhongzhou.Excavator.model.NC.CorporationSearchParameters;
 

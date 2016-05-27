@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
   
-<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.CorporationDAO">  
+<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.MD.CorporationDAO">  
+
+	<cache flushInterval="360000" size="1024" readOnly="true"/> 
 
     <resultMap type="Corporation" id="corporationMap">
     	<result property="id"                 	column="id"                 	/>
@@ -36,7 +38,7 @@
     </sql>
     
 
-    <sql id="corporationMappingWhere">
+    <sql id="corporationWhere">
     	cor.name is not null
     	<if test = "ids != null and ids.size() &gt; 0 ">
             and cor.id in 
@@ -234,7 +236,7 @@
 		
     </update>
     
-    <select id="countCorporationByDuplicateName" 
+    <select id="countDuplicateNameCorporation" 
     		parameterType="CorporationSearchParameters"  
     		resultType="java.lang.Integer">
     		
@@ -246,10 +248,10 @@
 			name in 
 				(select name  from  corporation  group  by  name  having  count(name) > 1)
 			and 
-			<include refid="corporationMappingWhere"/>
+			<include refid="corporationWhere"/>
     </select>  
     
-    <select id="selectCorporationByDuplicateName" 
+    <select id="selectDuplicateNameCorporations" 
     		parameterType="CorporationSearchParameters"  
     		resultMap="corporationMap">
     		
@@ -261,10 +263,26 @@
 			name in 
 				(select name  from  corporation  group  by  name  having  count(name) > 1)
 			and 
-			<include refid="corporationMappingWhere"/>
+			<include refid="corporationWhere"/>
 		<include refid="corporationPaging"/>
 		order by name
     </select>  
+    
+    <select id="selectCorporations" 
+    		parameterType="CorporationSearchParameters"  
+    		resultMap="corporationMap">
+    		
+    	select
+    		<include refid="corporationColumn"/>
+    	from 
+    		corporation cor
+		where 
+			<include refid="corporationWhere"/>
+		<include refid="corporationPaging"/>
+		order by name
+    </select> 
+    
+    
     
     <select id="selectCorporationIntegrationMapping" 
     		parameterType="CorporationIntegrationMappingSearchParameters"  

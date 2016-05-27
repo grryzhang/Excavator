@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
   
-<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.ItemDAO">  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.NC.ItemDAO">  
 
     <resultMap type="NC_ItemCategory" id="ncItemCategoryMap">
     	<result property="ENDFLAG"          column="ENDFLAG"           />
@@ -123,10 +123,10 @@
     <sql id="ncItemWhere">
     	item.PK_INVBASDOC is not null
     	<if test = "updateTimeStart != null">
-            and item.TS &gt;= #{updateTimeStart}  
+    		and to_timestamp(item.TS,'yyyy-mm-dd hh24:mi:ss') &gt;= #{updateTimeStart}  
         </if>
         <if test = "updateTimeEnd != null">
-            and item.TS &lt;= #{updateTimeEnd}  
+        	and to_timestamp(item.TS,'yyyy-mm-dd hh24:mi:ss') &gt;= #{updateTimeEnd}  
         </if>
     </sql>
     
