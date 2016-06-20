@@ -1,7 +1,7 @@
 package com.zhongzhou.Excavator.service.migration.NC;
 
-import com.zhongzhou.Excavator.Exception.ServiceRuntimeException;
 import com.zhongzhou.Excavator.model.NC.PriceSearchParameters;
+import com.zhongzhou.common.Exception.ServiceRuntimeException;
 
 /**
  * Refer the ServiceNameList.MIGRATION_NC_PriceService for implements Class Name

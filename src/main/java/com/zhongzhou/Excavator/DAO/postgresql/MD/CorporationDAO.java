@@ -49,6 +49,7 @@ public interface CorporationDAO {
 	 */
 	public List<Corporation> selectDuplicateNameCorporations( CorporationSearchParameters searchParameters) throws SQLException;
 	
+	public Integer countCorporations( CorporationSearchParameters searchParameters) throws SQLException;
 	
 	public List<Corporation> selectCorporations( CorporationSearchParameters searchParameters) throws SQLException;
 	

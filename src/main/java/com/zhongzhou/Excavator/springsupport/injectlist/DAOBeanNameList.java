@@ -6,6 +6,8 @@ public class DAOBeanNameList {
 	public static final String oracle_nc_item        = "oracle_nc_item";
 	public static final String oracle_nc_price       = "oracle_nc_price";
 	
+	public static final String oracle_erp_supplier             = "oracle_erp_supplier";
+	
 	public static final String postgresql_md_corporation = "postgresql_md_corporation";
 	public static final String postgresql_md_item        = "postgresql_md_item";
 	public static final String postgresql_md_price       = "postgresql_md_price";

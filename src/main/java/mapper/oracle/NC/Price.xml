@@ -116,8 +116,6 @@
 			left join 
 			    prm_tariff priceCategory on priceCategory.cpricetariffid = pt.cpricetariffid
 			where 
-			    pt.NPRICE0 is not null
-			    and
 			    <include refid="ncPriceWhere"/>
     </select>
     
@@ -146,8 +144,6 @@
 			left join 
 			    prm_tariff priceCategory on priceCategory.cpricetariffid = pt.cpricetariffid
 			where 
-			    pt.NPRICE0 is not null
-			    and
 			    <include refid="ncPriceWhere"/>
     </select>
     
@@ -183,8 +179,6 @@
 						left join 
 						    prm_tariff priceCategory on priceCategory.cpricetariffid = pt.cpricetariffid
 						where 
-						    pt.NPRICE0 is not null
-						    and
 			    			<include refid="ncPriceWhere"/>
 					) result 
 					WHERE ROWNUM &lt;= ${end} 

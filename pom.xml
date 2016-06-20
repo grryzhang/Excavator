@@ -138,7 +138,28 @@
             <artifactId>morphia</artifactId>
         	<version>1.1.0</version>
         </dependency>
-        <!-- Could not install it by MVN on line, install it manually at local -->
+        <dependency>
+    		<groupId>com.itextpdf</groupId>
+    		<artifactId>itextpdf</artifactId>
+    		<version>5.5.9</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.apache.pdfbox</groupId>
+    		<artifactId>pdfbox</artifactId>
+    		<version>2.0.1</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.apache.pdfbox</groupId>
+    		<artifactId>pdfbox-tools</artifactId>
+    		<version>2.0.1</version>
+		</dependency>
+		<!-- http://mvnrepository.com/artifact/net.sf.cssbox/pdf2dom -->
+		<dependency>
+    		<groupId>net.sf.cssbox</groupId>
+    		<artifactId>pdf2dom</artifactId>
+    		<version>1.5</version>
+		</dependency>
+        <!-- Could not install it by MVN on line, install it manually to local Repository -->
         <dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc</artifactId>

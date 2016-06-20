@@ -1,6 +1,6 @@
 package com.zhongzhou.Excavator.service.migration.NC;
 
-import com.zhongzhou.Excavator.Exception.ServiceRuntimeException;
+import com.zhongzhou.common.Exception.ServiceRuntimeException;
 
 /**
  * Refer the ServiceNameList.MIGRATION_NC_ItemCategoryService for implements Class Name

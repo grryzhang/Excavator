@@ -26,6 +26,11 @@
     	<typeAlias alias="CorporationIntegrationMappingSearchParameters" 
     			   type ="com.zhongzhou.Excavator.model.CorporationIntegrationMappingSearchParameters" />
     			   
+    			   
+    	<typeAlias alias="TOmSupplier"                   type ="com.zhongzhou.Excavator.model.ERP.TOmSupplier" />
+    	<typeAlias alias="TOmSupplierSearchParameters"   type ="com.zhongzhou.Excavator.model.ERP.TOmSupplierSearchParameters" />
+    	<typeAlias alias="TDimZtree"                     type ="com.zhongzhou.Excavator.model.ERP.TDimZtree" />		   
+    			   
     			       	
     	<typeAlias alias="NC_ItemCategory"                       type="com.zhongzhou.Excavator.model.NC.ItemCategory" />
     	<typeAlias alias="NC_ItemCategorySearchParameters"       type="com.zhongzhou.Excavator.model.NC.ItemCategorySearchParameters" />
@@ -67,6 +72,8 @@
     	<mapper resource="mapper/oracle/NC/Corporation.xml" />
     	<mapper resource="mapper/oracle/NC/Item.xml" />
     	<mapper resource="mapper/oracle/NC/Price.xml" />
+    	
+    	<mapper resource="mapper/oracle/ERP/Supplier.xml" />
     	
     	<mapper resource="mapper/postgresql/masterdata/Corporation.xml" />    
     	<mapper resource="mapper/postgresql/masterdata/Item.xml" />

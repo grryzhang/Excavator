@@ -46,12 +46,32 @@
         <property name="defaultAutoCommit" value="false" />  
     </bean>   
     
+    <bean 
+    	id="erpOracleDataSource" 
+    	class="org.apache.commons.dbcp.BasicDataSource"  
+        destroy-method="close">     
+        <!-- Connection Info -->  
+        <property name="driverClassName" value="${overall.db.oracle.erp.driverClassName}" />  
+        <property name="url" value="${overall.db.oracle.erp.url}" />  
+        <property name="username" value="${overall.db.oracle.erp.username}" />  
+        <property name="password" value="${overall.db.oracle.erp.password}" />  
+  
+        <!-- Connection Pooling DBCP -->  
+        <property name="initialSize" value="3" />  
+        <property name="maxActive" value="30" />  
+        <property name="maxIdle" value="30" />  
+        <property name="maxWait" value="1000" />  
+        <property name="poolPreparedStatements" value="true" />  
+        <property name="defaultAutoCommit" value="false" />  
+    </bean>  
+    
     <bean id="multiDataSource" class="com.zhongzhou.Excavator.springsupport.MultiDataSource">
         <property name="defaultTargetDataSource" ref="postgresqlDataSource"/>
         <property name="targetDataSources">
             <map>
             	<entry key="MASTER_POSTGRESQL" value-ref="postgresqlDataSource"/>
                 <entry key="NC_ORACLE"         value-ref="ncOracleDataSource"/>
+                <entry key="ERP_ORACLE"        value-ref="erpOracleDataSource"/>
             </map>
         </property>
     </bean>

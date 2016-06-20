@@ -278,8 +278,19 @@
     		corporation cor
 		where 
 			<include refid="corporationWhere"/>
-		<include refid="corporationPaging"/>
 		order by name
+		<include refid="corporationPaging"/>
+    </select> 
+    
+    <select id="countCorporations" 
+    		parameterType="CorporationSearchParameters"  
+    		resultType="java.lang.Integer">
+    	select
+    		count(*)
+    	from 
+    		corporation cor
+		where 
+			<include refid="corporationWhere"/>
     </select> 
     
     

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zhongzhou.Excavator.DAO.mongo.NC.NCItemCategoryDAO;
 import com.zhongzhou.Excavator.DAO.oracle.NC.ItemDAO;
-import com.zhongzhou.Excavator.Exception.ServiceRuntimeException;
 import com.zhongzhou.Excavator.model.Corporation;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMapping;
 import com.zhongzhou.Excavator.model.ItemCategoryMapping;
@@ -26,6 +25,7 @@ import com.zhongzhou.Excavator.model.ItemCategorySearchParameters;
 import com.zhongzhou.Excavator.service.migration.NC.NCItemCategoryService;
 import com.zhongzhou.Excavator.springsupport.injectlist.DAOBeanNameList;
 import com.zhongzhou.Excavator.springsupport.injectlist.ServiceNameList;
+import com.zhongzhou.common.Exception.ServiceRuntimeException;
 
 @Service(ServiceNameList.MIGRATION_NC_ItemCategoryService)
 public class ItemCategoryServiceImpl implements NCItemCategoryService{

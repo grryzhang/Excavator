@@ -5,5 +5,6 @@ public class DataSourceList{
 	public static final String  NC_ORACLE          = "NC_ORACLE";
 	public static final String  MASTER_POSTGRESQL  = "MASTER_POSTGRESQL";
 	public static final String  MONGO_MD_DOCUMENTS = "mongoMorphiaDataStore";
+	public static final String  ERP_ORACLE         = "ERP_ORACLE";
 }
 

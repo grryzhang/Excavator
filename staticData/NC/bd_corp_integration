@@ -1,0 +1,16 @@
+insert into corporation ( id, name, short_name, e_name ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1001' as uuid ),'中州集团',	                    '中州集团'         ,'' );
+insert into corporation ( id, name, short_name, e_name ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1002' as uuid ),'上海帕锐骑汽车零配件有限公司',	'上海帕锐骑'       ,'' );
+insert into corporation ( id, name, short_name, e_name ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1003' as uuid ),'Partrich',	                    'Partrich'         ,'Partrich' );
+insert into corporation ( id, name, short_name, e_name ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1004' as uuid ),'上海中洲企业发展有限公司',	    '上海中洲企业发展' ,'' );
+insert into corporation ( id, name, short_name, e_name ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1005' as uuid ),'上海中洲物流有限公司',	        '上海中洲物流'     ,'' );
+insert into corporation ( id, name, short_name, e_name ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1006' as uuid ),'上海中洲国际货运代理有限公司',	'上海中洲国际货运' ,'' );
+insert into corporation ( id, name, short_name, e_name ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1007' as uuid ),'上海伊莱尼柯电子科技有限公司',	'上海伊莱尼柯'     ,'' );
+
+
+insert into inter_corporation_2_source( corporation_id, source_id, source_code, data_source ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1001' as uuid ), '1001', '1'  , 'NC.BD_CORP' );
+insert into inter_corporation_2_source( corporation_id, source_id, source_code, data_source ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1002' as uuid ), '1002', '101', 'NC.BD_CORP' );
+insert into inter_corporation_2_source( corporation_id, source_id, source_code, data_source ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1003' as uuid ), '1003', '102', 'NC.BD_CORP' );
+insert into inter_corporation_2_source( corporation_id, source_id, source_code, data_source ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1004' as uuid ), '1004', '103', 'NC.BD_CORP' );
+insert into inter_corporation_2_source( corporation_id, source_id, source_code, data_source ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1005' as uuid ), '1005', '104', 'NC.BD_CORP' );
+insert into inter_corporation_2_source( corporation_id, source_id, source_code, data_source ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1006' as uuid ), '1006', '105', 'NC.BD_CORP' );
+insert into inter_corporation_2_source( corporation_id, source_id, source_code, data_source ) values ( cast( '01b94344-7e07-4dec-8f96-000553ad1007' as uuid ), '1007', '106', 'NC.BD_CORP' );

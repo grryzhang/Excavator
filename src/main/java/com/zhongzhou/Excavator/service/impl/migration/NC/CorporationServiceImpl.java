@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zhongzhou.Excavator.DAO.mongo.NC.NCCorporationDAO;
-import com.zhongzhou.Excavator.Exception.ServiceRuntimeException;
 import com.zhongzhou.Excavator.model.Corporation;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMapping;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMappingSearchParameters;
@@ -30,6 +29,7 @@ import com.zhongzhou.Excavator.service.migration.NC.NCCorporationService;
 import com.zhongzhou.Excavator.springsupport.injectlist.DAOBeanNameList;
 
 import com.zhongzhou.Excavator.springsupport.injectlist.ServiceNameList;
+import com.zhongzhou.common.Exception.ServiceRuntimeException;
 
 /**
  * @author Grry Zhang

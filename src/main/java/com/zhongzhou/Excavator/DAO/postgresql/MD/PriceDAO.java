@@ -20,9 +20,11 @@ import com.zhongzhou.Excavator.springsupport.injectlist.DataSourceList;
 @Service ( DAOBeanNameList.postgresql_md_price )
 public interface PriceDAO {
 	
-	public void insertPrice( List<Price> price ) throws SQLException;
+	public void insertPrices( List<Price> price ) throws SQLException;
 	
-	public void insertPriceMapping( List<PriceMapping> PriceMapping ) throws SQLException;
+	public void updatePrice( List<Price> price ) throws SQLException;
+	
+	public void insertPriceMappings( List<PriceMapping> PriceMapping ) throws SQLException;
 	
 	public List<PriceMapping> selectPriceMappings( PriceMappingSearchParameters searchParameters ) throws SQLException;
 

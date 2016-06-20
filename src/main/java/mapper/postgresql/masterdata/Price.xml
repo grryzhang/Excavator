@@ -105,7 +105,7 @@
 			<include refid="priceCategoryMappingWhere"/>
     </select> 
     
-    <insert id="insertPrice" parameterType="java.util.List">
+    <insert id="insertPrices" parameterType="java.util.List">
 		insert into price_list
 			( 
 				id, 
@@ -131,7 +131,7 @@
        	</foreach>
 	</insert>
 	
-	<insert id="insertPriceMapping" parameterType="java.util.List">
+	<insert id="insertPriceMappings" parameterType="java.util.List">
 		insert into inter_price_2_source
 			( 
 				id,price_id,source_id,data_source
@@ -189,5 +189,24 @@
 		</foreach>
 		
     </update>
+    
+    <update id="updatePrice" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		price_list
+    	set
+    		supplier_corp_id   = cast( #{item.supplierCorpId} as uuid ),
+    		customer_corp_id   = cast( #{item.customerCorpId} as uuid ),
+    		offer_corp_id      = cast( #{item.offerCorpId} as uuid ),
+    		price              = #{item.price},
+    		currency_id        = cast( #{item.currencyId} as uuid ),
+    		offer_type_id      = cast( #{item.offerTypeId} as uuid ),
+    		unit_id            = cast( #{item.unitId} as uuid ),
+    		last_update_time   = #{item.lastUpdateTime}
+		where id = cast( #{item.id} as uuid )
+		</foreach>
+    </update>
+    
+    
     
 </mapper>  

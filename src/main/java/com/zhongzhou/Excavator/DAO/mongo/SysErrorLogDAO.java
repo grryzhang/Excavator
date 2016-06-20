@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.mongodb.morphia.Datastore;
 import org.springframework.stereotype.Service;
 
-import com.zhongzhou.Excavator.model.system.SysErrorLog;
+import com.zhongzhou.common.model.SysErrorLog;
 
 @Service( "mongo.SysErrorLogDAO" )
 public class SysErrorLogDAO {

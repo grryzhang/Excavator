@@ -17,14 +17,14 @@ public class NCPriceDAO {
 	@Resource(name=DataSourceList.MONGO_MD_DOCUMENTS)
 	Datastore  mongoMorphiaDataStore;
 	
-	public void insertItem( com.zhongzhou.Excavator.model.NC.Item item ){
+	public void insertPrice( com.zhongzhou.Excavator.model.NC.Price price ){
 		
-		mongoMorphiaDataStore.save( item );
+		mongoMorphiaDataStore.save( price );
 	}
 	
-	public void insertItems( List<com.zhongzhou.Excavator.model.NC.Item> items ){
+	public void insertPrices( List<com.zhongzhou.Excavator.model.NC.Price> prices ){
 		
-		mongoMorphiaDataStore.save( items );
+		mongoMorphiaDataStore.save( prices );
 	}
 	
 }

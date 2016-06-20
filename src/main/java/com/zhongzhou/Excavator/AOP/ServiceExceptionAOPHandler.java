@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.zhongzhou.Excavator.DAO.mongo.SysErrorLogDAO;
-import com.zhongzhou.Excavator.Exception.ServiceRuntimeException;
-import com.zhongzhou.Excavator.model.system.SysErrorLog;
+import com.zhongzhou.common.Exception.ServiceRuntimeException;
+import com.zhongzhou.common.model.SysErrorLog;
 
 import util.BeanJsonUtil;
 

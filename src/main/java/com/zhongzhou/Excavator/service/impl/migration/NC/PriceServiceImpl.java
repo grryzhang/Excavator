@@ -16,10 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zhongzhou.Excavator.Annotation.DataSource;
 import com.zhongzhou.Excavator.DAO.postgresql.MD.ItemDAO;
+import com.zhongzhou.Excavator.DAO.mongo.NC.NCItemDAO;
+import com.zhongzhou.Excavator.DAO.mongo.NC.NCPriceDAO;
 import com.zhongzhou.Excavator.DAO.postgresql.MD.CorporationDAO;
 import com.zhongzhou.Excavator.DAO.postgresql.MD.CurrencyDAO;
 import com.zhongzhou.Excavator.DAO.postgresql.MD.PriceDAO;
-import com.zhongzhou.Excavator.Exception.ServiceRuntimeException;
 import com.zhongzhou.Excavator.model.Corporation;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMapping;
 import com.zhongzhou.Excavator.model.CorporationIntegrationMappingSearchParameters;
@@ -42,6 +43,8 @@ import com.zhongzhou.Excavator.service.migration.NC.NCPriceService;
 import com.zhongzhou.Excavator.springsupport.injectlist.DAOBeanNameList;
 import com.zhongzhou.Excavator.springsupport.injectlist.DataSourceList;
 import com.zhongzhou.Excavator.springsupport.injectlist.ServiceNameList;
+import com.zhongzhou.common.Exception.ServiceRuntimeException;
+import com.zhongzhou.common.model.ServiceResult;
 
 @Service(ServiceNameList.MIGRATION_NC_PriceService)
 public class PriceServiceImpl implements NCPriceService{
@@ -62,6 +65,9 @@ public class PriceServiceImpl implements NCPriceService{
 	
 	@Resource ( name=DAOBeanNameList.postgresql_md_item )
 	private ItemDAO mdItemDAO;
+	
+	@Resource( name=DAOBeanNameList.mongo_nc_price )
+	NCPriceDAO mongoNCPriceDAO;
 	
 	@Override
 	public void migratePriceCategory() throws ServiceRuntimeException {
@@ -140,7 +146,7 @@ public class PriceServiceImpl implements NCPriceService{
 					/* get the mapping data, to check which one should be insert, which one should be update */
 					List<String> sourceIds = new ArrayList<String>();
 					for( com.zhongzhou.Excavator.model.NC.Price doc : pendingInsert ){
-						sourceIds.add( doc.getPK_INVBASDOC() );
+						sourceIds.add( doc.getCPRICETARIFF_BID() );
 					}
 					PriceMappingSearchParameters mappingSearchParameters = new PriceMappingSearchParameters();
 					mappingSearchParameters.setSourceIds( sourceIds );
@@ -169,7 +175,7 @@ public class PriceServiceImpl implements NCPriceService{
 						((PriceServiceImpl) AopContext.currentProxy()).addNCPrice( pendingInsert );
 					}
 					if( pendingUpdate!= null && pendingUpdate.size() > 0 ){
-						//((PriceServiceImpl) AopContext.currentProxy()).changeNCPrice( pendingUpdate );
+						((PriceServiceImpl) AopContext.currentProxy()).changeNCPrice( pendingUpdate );
 					}
 				}
 				
@@ -179,7 +185,10 @@ public class PriceServiceImpl implements NCPriceService{
 
 		} catch (SQLException e) {
 			
-			ServiceRuntimeException exception = new ServiceRuntimeException( "Error in migrating NC Price Category. SQL exception:" , e );
+			ServiceRuntimeException exception 
+				= new ServiceRuntimeException( 
+						"Error in migrating NC Price Category. SQL exception:" , e 
+			);
 			exception.fillInStackTrace();
 			throw exception;
 		}
@@ -246,6 +255,7 @@ public class PriceServiceImpl implements NCPriceService{
 				}
 				price.setPrice( ncDoc.getNPRICE0() );
 				price.setOfferTypeId( "b0ac1b13-5d3f-49ca-8435-5c935473253a" );
+				
 			}else {	
 				if( currencyMappings != null && currencyMappings.size() > 0 ){
 					price.setCustomerCorpId( corInterMappings.get(0).getCorporationId() );
@@ -264,6 +274,8 @@ public class PriceServiceImpl implements NCPriceService{
 			List<ItemMapping> itemMappings = mdItemDAO.selectItemMappings( itemSearchParameters );
 			if( itemMappings != null && itemMappings.size() > 0 ){
 				price.setItemId( itemMappings.get(0).getItemId() );
+			}else{
+				continue;
 			}
 			
 			price.setLastUpdateTime(currentTime);
@@ -295,10 +307,107 @@ public class PriceServiceImpl implements NCPriceService{
 			/*prepare Mongo data*/
 			ncDoc.setDocCreateTime( currentTime );
 		}
-		mdPriceDAO.insertPrice( prices );
-		mdPriceDAO.insertPriceMapping( priceMappings );
+		mdPriceDAO.insertPrices( prices );
+		mdPriceDAO.insertPriceMappings( priceMappings );
+		
+		mongoNCPriceDAO.insertPrices( ncPendingInsert );
 		
 		return insertIds;
+
+		//TODO 
+		//insert new corporations doc of master data
+	}
+	
+	/**
+	 * @author Grry Zhang
+	 */
+	@Transactional(
+			propagation=Propagation.REQUIRED,
+			isolation=Isolation.READ_COMMITTED,
+			readOnly=false,
+			rollbackFor=Exception.class )
+	public List<String> changeNCPrice( List<com.zhongzhou.Excavator.model.NC.Price> ncPendingUpdate ) throws SQLException{
+		
+		List<Price> prices = new ArrayList<Price>();
+		List<String> updateIds = new ArrayList<String>();
+		
+		Timestamp currentTime = new Timestamp( System.currentTimeMillis() );  
+		
+	
+		for( int i=0; i<ncPendingUpdate.size(); i++ ){
+			
+			com.zhongzhou.Excavator.model.NC.Price ncDoc = ncPendingUpdate.get(i);
+			
+			updateIds.add( ncDoc.getTargetId() );
+			
+			/* Set id */
+			Price price = new Price();
+			price.setId( ncDoc.getTargetId() );
+			
+			/* Set currency_id */
+			CurrencyMappingSearchParameters searchParameters = new CurrencyMappingSearchParameters();
+			searchParameters.setSourceId( ncDoc.getPK_CURRTYPE() );
+			List<CurrencyMapping> currencyMappings = mdCurrencyDAO.selectCurrencyMappings(searchParameters);
+			if( currencyMappings != null && currencyMappings.size() > 0 ){
+				price.setCurrencyId( currencyMappings.get(0).getCurrencyId() );
+			}
+			
+			/* Set supplier, offer, customer, price */
+			CorporationIntegrationMappingSearchParameters CIMSearchParameter = new CorporationIntegrationMappingSearchParameters();
+			CIMSearchParameter.setSourceId( ncDoc.getPK_CORP() );
+			List<CorporationIntegrationMapping> corInterMappings = corporationDAO.selectCorporationIntegrationMapping(CIMSearchParameter);
+
+			CIMSearchParameter = new CorporationIntegrationMappingSearchParameters();
+			CIMSearchParameter.setSourceId( ncDoc.getPK_CUBASDOC() );
+			List<CorporationIntegrationMapping> priceCorpMappings = corporationDAO.selectCorporationIntegrationMapping(CIMSearchParameter);
+			
+			
+			/*
+			 * "0abe02c7-3df2-4986-a4a5-1a5db681fcc2";"sale_price";"采购报价";"price.type";1
+			 * "b0ac1b13-5d3f-49ca-8435-5c935473253a";"purchase_price";"参考售价";"price.type";2
+			 */
+			
+			if( "01".equals( ncDoc.getCPRICETYPECODE() ) ){
+				if( corInterMappings != null && corInterMappings.size() > 0 ){
+					price.setOfferCorpId( corInterMappings.get(0).getCorporationId() );
+				}
+				if( priceCorpMappings != null && currencyMappings.size() > 0 ){
+					price.setCustomerCorpId( priceCorpMappings.get(0).getCorporationId() );
+				}
+				price.setPrice( ncDoc.getNPRICE0() );
+				price.setOfferTypeId( "b0ac1b13-5d3f-49ca-8435-5c935473253a" );
+				
+			}else {	
+				if( currencyMappings != null && currencyMappings.size() > 0 ){
+					price.setCustomerCorpId( corInterMappings.get(0).getCorporationId() );
+				}
+				if( priceCorpMappings != null && currencyMappings.size() > 0 ){
+					price.setOfferCorpId( priceCorpMappings.get(0).getCorporationId() );
+					price.setSupplierCorpId( priceCorpMappings.get(0).getCorporationId() );
+				}
+				price.setPrice( ncDoc.getNPRICE1() );
+				price.setOfferTypeId( "0abe02c7-3df2-4986-a4a5-1a5db681fcc2" );
+			}
+			
+			price.setLastUpdateTime(currentTime);
+			
+			ItemUnitMappingSearchParameters IUMSearchParameters = new ItemUnitMappingSearchParameters();
+			IUMSearchParameters.setSourceId( ncDoc.getPK_MEASDOC() );
+			List<ItemUnitMapping> itemUnitMappings = mdItemDAO.selectItemUnitMappings( IUMSearchParameters );
+			if( itemUnitMappings != null && itemUnitMappings.size() > 0 ){
+				price.setUnitId( itemUnitMappings.get(0).getItemUnitId() );
+			}
+			
+			prices.add( price );
+			
+			/*prepare Mongo data*/
+			ncDoc.setDocCreateTime( currentTime );
+		}
+		mdPriceDAO.updatePrice( prices );
+		
+		mongoNCPriceDAO.insertPrices( ncPendingUpdate );
+		
+		return updateIds;
 
 		//TODO 
 		//insert new corporations doc of master data
