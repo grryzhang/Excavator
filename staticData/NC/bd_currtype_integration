@@ -1,0 +1,12 @@
+
+insert into currency ( id, currency_name, currency_code, currency_sign) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc1' as uuid ),'EUR',	'欧元'  ,	'€'   );
+insert into currency ( id, currency_name, currency_code, currency_sign) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc2' as uuid ),'CAD',	'加币'  ,	'$'   );
+insert into currency ( id, currency_name, currency_code, currency_sign) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc3' as uuid ),'HKD',	'港币'  ,	'HK$' );
+insert into currency ( id, currency_name, currency_code, currency_sign) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc4' as uuid ),'CNY',	'人民币',	'￥'  );
+insert into currency ( id, currency_name, currency_code, currency_sign) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc4' as uuid ),'USD',	'美元'	,	'$'   );
+
+insert into inter_currency_2_source ( currency_id, source_id ) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc1' as uuid ), '0001A11000000000013R' );
+insert into inter_currency_2_source ( currency_id, source_id ) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc2' as uuid ), '0001A110000000002VK1' );
+insert into inter_currency_2_source ( currency_id, source_id ) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc3' as uuid ), '0001A110000000001UPK' );
+insert into inter_currency_2_source ( currency_id, source_id ) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc4' as uuid ), '00010000000000000001' );
+insert into inter_currency_2_source ( currency_id, source_id ) values ( cast( '01b94344-7e07-4dec-8f96-000153ff1cc4' as uuid ), '00010000000000000002' );

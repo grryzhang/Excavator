@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.MD.WebSourcePriceDAO">  
+	
+	<resultMap type="WebSourcePrice" id="webSourcePriceMap">
+		<result property="id"                  column="id"           />
+		<result property="itemName"     	   column="item_name"    />
+		<result property="price"               column="price"        />
+		<result property="date"                column="date"         />
+		<result property="location"            column="location"     />
+		<result property="group"               column="group"        />
+		<result property="source"              column="source"       />
+    </resultMap>  
+    
+    <sql id="priceColumn">
+    	wsp.id, 
+    	wsp.item_name, wsp.price, wsp.date, wsp.location, wsp.group,wsp.source
+    </sql>
+    
+    <insert id="insertWebSourcePrice" parameterType="java.util.List">
+		insert into web_source_price
+			( 
+    			item_name, price, date, location, "group", source
+			)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >  
+        	( 	 
+				#{item.itemName}, #{item.price},#{item.date},#{item.location},
+				#{item.group}, #{item.source}
+			)
+       	</foreach>
+	</insert>
+</mapper>  

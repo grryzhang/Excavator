@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.EvaluationPlatform.SupplierDAO">  
+
+    <resultMap type="TOmSupplier" id="TOmSupplierMap">
+    	<result property="FNUMBER"        column="FNUMBER"        />
+		<result property="FNAME"          column="FNAME"          />
+		<result property="FSHORTNAME"     column="FSHORTNAME"     />
+		<result property="FPARENTNO"      column="FPARENTNO"      />
+		<result property="FADDR"          column="FADDR"          />
+		<result property="FID"            column="FID"            />
+		<result property="FNAME_EN"       column="FNAME_EN"       />
+		<result property="INDUSTRY"       column="INDUSTRY"       />
+		<result property="INDUSTRY_EN"    column="INDUSTRY_EN"    />
+    </resultMap>  
+    
+      <resultMap type="TDimZtree" id="TDimZtreeMap">
+    	<result property="FNUMBER"        column="FNUMBER"       />
+		<result property="FNAME"          column="FNAME"         />
+		<result property="FPARENTNO"      column="FPARENTNO"     />
+		<result property="FPARENTNAME"    column="FPARENTNAME"   />
+		<result property="FLEVEL"         column="FLEVEL"        />
+		<result property="FISLEAF"        column="FISLEAF"       />
+		<result property="FTYPE"          column="FTYPE"         />
+		<result property="FID"            column="FID"           />
+		<result property="FTYPE_LANG"     column="FTYPE_LANG"    />
+    </resultMap>  
+    
+    <!-- Here, the data model in the EvaluationPlatform can transfer to the MD model without any problem , 
+	     so use the MD model as the entity model  -->
+    <resultMap type="CorporationGrade" id="SupplierGradeMap">
+    	<id     property="gradeId"           column="grade_id"             />
+    	<result property="id"        		 column="id"                   />
+		<result property="corporationId"     column="corporation_Id"       />
+		<result property="corporationGroup"  column="corporation_group"    />
+		<result property="gradeScore"        column="grade_score"          />
+		<result property="gradeLevel"        column="grade_level"          />
+		<result property="createTime"        column="create_time"          />
+		<collection property="gradeItems" resultMap="SupplierGradeItemMap">  
+        </collection>  
+    </resultMap>  
+    
+    <resultMap type="CorporationGradeItem" id="SupplierGradeItemMap">
+    	<result property="itemId"               column="item_id"           />
+		<result property="gradeId"              column="grade_id"          />
+		<result property="gradeItemId"          column="grade_item_id"     />
+		<result property="gradeItemScore"       column="grade_item_score"  />
+		<result property="gradeItemWeight"      column="grade_item_weight" />
+		<result property="gradeItemGroup"       column="grade_item_group"  />
+		<result property="gradeItem"            column="grade_item"        />
+    </resultMap>  
+    
+    <sql id="TOmSupplierColumn">
+    	tos.FNUMBER,tos.FNAME,tos.FSHORTNAME,
+    	tos.FPARENTNO,tos.FADDR,tos.FID,tos.FNAME_EN,tos.INDUSTRY,tos.INDUSTRY_EN
+    </sql>
+    <sql id="TOmSupplierWhere">
+    	tos.FID is not null
+    	<if test = "FIDs != null and FIDs.size() &gt; 0 ">
+            and tos.FID in 
+            <foreach item="item" index="index" collection="FIDs" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+         <if test = "FPARENTNOs != null and FPARENTNOs.size() &gt; 0 ">
+            and tos.FPARENTNO in 
+            <foreach item="item" index="index" collection="FPARENTNOs" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+         <if test = "FNUMBERs != null and FNUMBERs.size() &gt; 0 ">
+            and tos.FNUMBER in 
+            <foreach item="item" index="index" collection="FNUMBERs" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+    </sql>
+
+    <sql id="SupplierGradeColumn">
+    	SUPPLIER.FID         as corporation_id,
+    	SUPPLIER.FPARENTNO   as corporation_group,
+    	head.FEVAID          as grade_id,
+    	head.FSCOREALL       as grade_score,
+		head.FLEVEL          as grade_level,
+		to_date(head.FDATE,'yyyy-mm-dd') as create_time,
+		body.FITEMNO         as grade_item_id,
+		body.fscore          as grade_item_score,
+		full_weight.fweight  as grade_item_weight,
+		STANDARD.FTYPE       as grade_item_group,
+		STANDARD.FITEM       as grade_item
+    </sql>
+    <sql id="SupplierGradeWhere">
+    	SUPPLIER.FID is not null
+    	<if test = "corporationIds != null and corporationIds.size() &gt; 0 ">
+            and SUPPLIER.FID in 
+            <foreach item="item" index="index" collection="corporationIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+        </if>
+    </sql>
+    
+    <!-- 
+    Here is the insert. 
+   	if we want to use this function to insert mulit-data into oracle, the tage name must be select
+    -->
+	<select id="insertSuppliers" parameterType="java.util.List">
+		insert into t_om_supplier
+		( 
+			FNUMBER, 
+			FNAME, 
+			FSHORTNAME, 
+			FPARENTNO, 
+			FADDR, 
+			FID, 
+			FNAME_EN, 
+			INDUSTRY, 
+			INDUSTRY_EN  
+		)
+		(
+        <foreach collection="list" item="item" index="index" separator="union all" > 
+        		select
+        			#{item.FNUMBER},
+        			#{item.FNAME},
+        			#{item.FSHORTNAME,jdbcType=VARCHAR},
+        			#{item.FPARENTNO},
+        			#{item.FADDR,jdbcType=VARCHAR},
+        			#{item.FID},
+        			#{item.FNAME_EN,jdbcType=VARCHAR},
+        			#{item.INDUSTRY,jdbcType=VARCHAR},
+        			#{item.INDUSTRY_EN,jdbcType=VARCHAR}
+        		from dual	  
+       	</foreach>
+       	)
+    </select>
+    
+    <select id="insertSupplierZTrees" parameterType="java.util.List">
+		insert into t_dim_ztree
+		( 
+			FNUMBER, 
+			FNAME, 
+			FPARENTNO, 
+			FPARENTNAME, 
+			FLEVEL, 
+			FISLEAF, 
+			FTYPE, 
+			FID, 
+			FTYPE_LANG
+		)
+		(
+        <foreach collection="list" item="item" index="index" separator="union all" > 
+        		select
+        			#{item.FNUMBER},
+        			#{item.FNAME},
+        			#{item.FPARENTNO},
+        			#{item.FPARENTNAME},
+        			#{item.FLEVEL},
+        			#{item.FISLEAF},
+        			#{item.FTYPE},
+        			#{item.FID},
+        			#{item.FTYPE_LANG}
+        		from dual	  
+       	</foreach>
+       	)
+    </select>
+    
+    <update id="updateSuppliers" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";" >
+    	 	<if test = "item.FNUMBER != null">
+            	update t_om_supplier set 
+            		FNAME      = #{item.FNAME},
+            		FSHORTNAME = #{item.FSHORTNAME}
+            	 where FNUMBER = #{item.FNUMBER}
+         	</if>
+    	</foreach>
+    </update>
+    
+    <update id="updateSupplierZTrees" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";" >
+    	 	<if test = "item.FNUMBER != null">
+            	update t_dim_ztree set FNAME = #{item.FNAME} where FNUMBER = #{item.FNUMBER}
+         	</if>
+    	</foreach>
+    </update>
+    
+    <select id="selectMaxNumberByParentno"  
+    		resultType="java.math.BigInteger">
+		select max(to_number(FNUMBER)) from t_om_supplier where FPARENTNO = #{FPARENTNO}
+    </select> 
+    
+    <select id="selectTOmSupplier"  
+    		parameterType="TOmSupplierSearchParameters"  
+    		resultMap="TOmSupplierMap">
+		select 
+			<include refid="TOmSupplierColumn"/>
+		from 
+			t_om_supplier tos 
+		where 
+			<include refid="TOmSupplierWhere"/>
+    </select>
+    
+    
+    <select id="selectSupplierGrades"
+    		parameterType="CorporationGradeSearchParameters"  
+    		resultMap="SupplierGradeMap">
+    		
+		select 
+			<include refid="SupplierGradeColumn"/>
+		from 
+    		T_OM_SUPPLIER_EVA_HEAD head
+			left join 
+    			T_OM_SUPPLIER supplier
+        		on 
+            		supplier.FNUMBER = head.FsupplierNo
+			left join 
+    			T_OM_SUPPLIER_EVA_BODY body
+        		on 
+            		BODY.FEVAID = head.FEVAID
+			left join
+    			T_OM_SUPPLIER_EVA_STD standard
+       			on 
+            		standard.FSTDNO = head.FSTDNO
+            		and standard.fitemno = body.fitemno
+            left join 
+    			(
+       				select 
+       					max( to_number( ( case when regexp_like( to_char(fweight),'^[[:digit:]]+$') then to_char(fweight) else '-1' end ) ) ) as fweight, 
+       					fstdno, 
+       					ftype 
+       				from 
+       					T_OM_SUPPLIER_EVA_STD 
+       				group by 
+       				ftype,fstdno
+    			) full_weight
+        		on 
+        			STANDARD.FSTDNO = full_weight.FSTDNO 
+        			and STANDARD.ftype = full_weight.ftype
+			where 
+				( body.fscore is not null or ( body.fscore = 0 and body.fweight = 0 ) ) 
+				and
+				<include refid="SupplierGradeWhere"/>
+			order by 
+				create_time desc, corporation_id, grade_item_id
+    </select>
+</mapper>  

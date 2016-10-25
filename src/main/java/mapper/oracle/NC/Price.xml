@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.NC.PriceDAO">  
+
+    	
+    <resultMap type="NC_Price" id="ncPriceMap">
+    	<result property="CPRICETARIFF_BID"  column="CPRICETARIFF_BID"  />
+		<result property="PK_CORP"           column="PK_CORP"           />
+		<result property="UNITNAME"          column="UNITNAME"          />
+		<result property="PK_CUBASDOC"       column="PK_CUBASDOC"       />
+		<result property="CUSTNAME"       	 column="CUSTNAME"       />
+		<result property="CUSTSHORTNAME"     column="CUSTSHORTNAME"     />
+		<result property="NPRICE0"           column="NPRICE0"          />
+		<result property="NPRICE1"           column="NPRICE1"          />
+		<result property="PK_CURRTYPE"       column="PK_CURRTYPE"       />
+		<result property="CURRTYPENAME"      column="CURRTYPENAME"      />
+		<result property="CPRICETYPECODE"    column="CPRICETYPECODE"    />
+		<result property="CPRICETYPENAME"    column="CPRICETYPENAME"    />
+		<result property="MEASNAME"          column="MEASNAME"          />
+		<result property="PK_MEASDOC"        column="PK_MEASDOC"        />
+		<result property="PK_INVBASDOC"      column="PK_INVBASDOC"      />
+		<result property="CPRICETARIFFNAME"  column="CPRICETARIFFNAME"  />
+		<result property="CPRICETARIFFID"    column="CPRICETARIFFID"    />
+		<result property="TS"                column="TS"                />
+    </resultMap>   
+    	
+    <resultMap type="NC_PriceCategory" id="ncPriceCategoryMap">
+    	<result	property="BCURRENTTARIFF"		 column="BCURRENTTARIFF"      />
+		<result	property="CCREATERID"            column="CCREATERID"          />
+		<result	property="CDEFCURRENCYID"        column="CDEFCURRENCYID"      />
+		<result	property="CDEFMEASDOCID"         column="CDEFMEASDOCID"       />
+		<result	property="CDOWNPRICETARIFFID"    column="CDOWNPRICETARIFFID"  />
+		<result	property="CPRICETARIFFCODE"      column="CPRICETARIFFCODE"    />
+		<result	property="CPRICETARIFFID"        column="CPRICETARIFFID"      />
+		<result	property="CPRICETARIFFNAME"      column="CPRICETARIFFNAME"    />
+		<result	property="DCREATEDATE"           column="DCREATEDATE"         />
+		<result	property="DR"                    column="DR"                  />
+		<result	property="FCURRENCYDIM"          column="FCURRENCYDIM"        />
+		<result	property="FCUSTCLDIM"            column="FCUSTCLDIM"          />
+		<result	property="FCUSTOMERDIM"          column="FCUSTOMERDIM"        />
+		<result	property="FINVCLASSDIM"          column="FINVCLASSDIM"        />
+		<result	property="FINVDIM"               column="FINVDIM"             />
+		<result	property="FMEASDIM"              column="FMEASDIM"            />
+		<result	property="FRECAREADIM"           column="FRECAREADIM"         />
+		<result	property="FSALEORGDIM"           column="FSALEORGDIM"         />
+		<result	property="PK_CORP"               column="PK_CORP"             />
+		<result	property="TS"                    column="TS"                  />
+    </resultMap> 
+    
+    <sql id="ncPriceColumns">
+   		pt.cpricetariff_bid as CPRICETARIFF_BID ,
+   		pt.NPRICE0 as NPRICE0, pt.NPRICE1 as NPRICE1, pt.TS as TS,
+    	us.PK_CORP as PK_CORP,us.unitNAME as UNITNAME,
+		bc2.PK_CUBASDOC as PK_CUBASDOC,bc2.CUSTNAME as CUSTNAME,bc2.CUSTSHORTNAME as CUSTSHORTNAME,
+		CURR.PK_CURRTYPE as PK_CURRTYPE,
+		curr.currtypename as CURRTYPENAME,
+		PP.CPRICETYPENAME as CPRICETYPENAME, PP.CPRICETYPECODE as CPRICETYPECODE,
+		meas.MEASNAME as MEASNAME,MEAS.PK_MEASDOC as PK_MEASDOC,
+		item.pk_invbasdoc as PK_INVBASDOC,
+		PRICECATEGORY.cpricetariffname as CPRICETARIFFNAME,PRICECATEGORY.cpricetariffid as CPRICETARIFFID
+		
+    </sql>
+    <sql id="ncPriceCategoryColumnMap">
+    	tariff.BCURRENTTARIFF,tariff.CCREATERID,
+    	tariff.CDEFCURRENCYID,tariff.CDEFMEASDOCID,tariff.CDOWNPRICETARIFFID,
+    	tariff.CPRICETARIFFCODE,tariff.CPRICETARIFFID,tariff.CPRICETARIFFNAME,
+    	tariff.DCREATEDATE,tariff.DR,tariff.FCURRENCYDIM,tariff.FCUSTCLDIM,tariff.FCUSTOMERDIM,
+    	tariff.FINVCLASSDIM,tariff.FINVDIM,tariff.FMEASDIM,tariff.FRECAREADIM,
+    	tariff.FSALEORGDIM,tariff.PK_CORP,tariff.TS
+    </sql>
+	
+    <sql id="ncPriceWhere">
+    	pt.cpricetariff_bid is not null
+    	and pt.DR != 1
+    	<if test = "itemIds != null and itemIds.size() &gt; 0 ">
+            and item.pk_invbasdoc in 
+            <foreach item="item" index="index" collection="itemIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+        </if>
+        <if test = "customerNames != null and customerNames.size() &gt; 0 ">
+            and 
+            	( bc2.CUSTNAME in 
+            <foreach item="item" index="index" collection="itemIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+            		or 
+            	  bc2.custshortname in 
+           	<foreach item="item" index="index" collection="itemIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+            	)
+        </if>
+    	<if test = "priceType != null">
+            and pp.CPRICETYPECODE = #{priceType}
+        </if>
+    	<if test = "startTS != null">
+            and to_timestamp(pt.ts,'yyyy-mm-dd hh24:mi:ss') &gt;= #{startTS}
+        </if>
+    	<if test = "endTS != null">
+        	and to_timestamp(pt.ts,'yyyy-mm-dd hh24:mi:ss') &lt;= #{endTS}
+        </if>    
+    </sql>
+    
+    <select id="selectPriceCategory"
+    		resultMap="ncPriceCategoryMap">
+			
+		select 
+			<include refid="ncPriceCategoryColumnMap"/>
+		from 
+    		PRM_TARIFF tariff	
+    </select>
+    
+    <select id="countPrice"
+    		parameterType="NC_PriceSearchParameters"  
+    		resultType="java.lang.Integer">
+    		
+    		select
+    			count(*)
+			from 
+			    prm_tariffcurlist pt
+			left join 
+			    bd_cumandoc bc1 ON pt.ccustomerid = bc1.pk_cumandoc
+			left join
+			    bd_cubasdoc bc2 ON bc1.pk_cubasdoc = bc2.pk_cubasdoc
+			left join
+			    prm_pricetype pp on pt.cdefpricetypeid = pp.cpricetypeid
+			left join 
+			    bd_corp us on us.pk_corp = pp.pk_corp
+			left join 
+			    bd_currtype curr on CURR.PK_CURRTYPE = pt.ccurrencyid 
+			left join 
+			    bd_measdoc meas ON meas.pk_measdoc = pt.cmeasdocid
+			left join
+			    bd_invbasdoc item ON pt.cinvbasdocid = item.pk_invbasdoc    
+			left join 
+			    prm_tariff priceCategory on priceCategory.cpricetariffid = pt.cpricetariffid
+			where 
+			    <include refid="ncPriceWhere"/>
+    </select>
+    
+    <select id="selectPrice"
+    		parameterType="NC_PriceSearchParameters"  
+    		resultMap="ncPriceMap">
+    		
+    		select
+    			<include refid="ncPriceColumns"/>
+			from 
+			    prm_tariffcurlist pt
+			left join 
+			    bd_cumandoc bc1 ON pt.ccustomerid = bc1.pk_cumandoc
+			left join
+			    bd_cubasdoc bc2 ON bc1.pk_cubasdoc = bc2.pk_cubasdoc
+			left join
+			    prm_pricetype pp on pt.cdefpricetypeid = pp.cpricetypeid
+			left join 
+			    bd_corp us on us.pk_corp = pp.pk_corp
+			left join 
+			    bd_currtype curr on CURR.PK_CURRTYPE = pt.ccurrencyid 
+			left join 
+			    bd_measdoc meas ON meas.pk_measdoc = pt.cmeasdocid
+			left join
+			    bd_invbasdoc item ON pt.cinvbasdocid = item.pk_invbasdoc    
+			left join 
+			    prm_tariff priceCategory on priceCategory.cpricetariffid = pt.cpricetariffid
+			where 
+			    <include refid="ncPriceWhere"/>
+    </select>
+    
+    <select id="selectPriceWithRow"
+    		parameterType="NC_PriceSearchParameters"  
+    		resultMap="ncPriceMap">
+    		
+    	SELECT * 
+		FROM 
+			( 
+				SELECT 
+					result.*, ROWNUM RN 
+				FROM 
+					(
+						select
+    						<include refid="ncPriceColumns"/>
+						from 
+						    prm_tariffcurlist pt
+						left join 
+						    bd_cumandoc bc1 ON pt.ccustomerid = bc1.pk_cumandoc
+						left join
+						    bd_cubasdoc bc2 ON bc1.pk_cubasdoc = bc2.pk_cubasdoc
+						left join
+						    prm_pricetype pp on pt.cdefpricetypeid = pp.cpricetypeid
+						left join 
+						    bd_corp us on us.pk_corp = pp.pk_corp
+						left join 
+						    bd_currtype curr on CURR.PK_CURRTYPE = pt.ccurrencyid 
+						left join 
+						    bd_measdoc meas ON meas.pk_measdoc = pt.cmeasdocid
+						left join
+						    bd_invbasdoc item ON pt.cinvbasdocid = item.pk_invbasdoc    
+						left join 
+						    prm_tariff priceCategory on priceCategory.cpricetariffid = pt.cpricetariffid
+						where 
+			    			<include refid="ncPriceWhere"/>
+					) result 
+					WHERE ROWNUM &lt;= ${end} 
+			) 
+		WHERE RN &gt;= ${start}
+		
+    </select>
+</mapper>  

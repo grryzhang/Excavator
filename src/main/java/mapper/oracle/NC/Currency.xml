@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.NC.CurrencyDAO">  
+    <resultMap type="NC_Currency" id="ncCurrencyMap">
+    	<result property="pk_currtype"        column="PK_CURRTYPE"  />
+		<result property="currtypecode"       column="CURRTYPECODE"       />
+		<result property="currtypename"       column="CURRTYPENAME"       />
+		<result property="currtypesign"       column="CURRTYPESIGN"       />
+    </resultMap>   
+    	
+    <resultMap type="NC_CurrencyRate" id="ncCurrencyRateMap">
+    	<result	property="pk_currinfo"		 column="PK_CURRINFO"      />
+    	<result	property="pk_currrate"		 column="PK_CURRRATE"      />
+		<result	property="rate"        		 column="RATE"          />
+		<association property="domesticCurrency" column="PK_CURRTYPE" javaType="NC_Currency">
+			<result property="pk_currtype"        column="PK_CURRTYPE"  />
+			<result property="currtypecode"       column="CURRTYPECODE"       />
+			<result property="currtypename"       column="CURRTYPENAME"       />
+			<result property="currtypesign"       column="CURRTYPESIGN"       />
+		</association>
+		<association property="foreignCurrency" column="OPPCURRTYPE" javaType="NC_Currency">
+			<result property="pk_currtype"        column="OPPCURRTYPE"  />
+			<result property="currtypecode"       column="OPPCURRTYPECODE"       />
+			<result property="currtypename"       column="OPPCURRTYPENAME"       />
+			<result property="currtypesign"       column="OPPCURRTYPESIGN"       />
+		</association>
+    </resultMap> 
+
+    <select id="selectExchangeRate" resultMap="ncCurrencyRateMap">
+		select * from 
+			(
+				select 
+					info.pk_currtype, domesticCurrency.currtypecode, 
+					domesticCurrency.currtypename,  domesticCurrency.currtypesign, 
+					info.OPPCURRTYPE, foreignCurrency.currtypecode as OPPCURRTYPECODE, 
+					foreignCurrency.currtypename as OPPCURRTYPENAME,  foreignCurrency.currtypesign as OPPCURRTYPESIGN,
+					rate.rate,
+					info.pk_currinfo, rate.pk_currrate
+				from  
+					bd_currinfo info
+					left join 
+						bd_currtype domesticCurrency 
+						on info.pk_currtype = domesticCurrency.pk_currtype
+					left join 
+						bd_currtype foreignCurrency 
+						on info.oppcurrtype = foreignCurrency.pk_currtype
+					left join 
+						bd_currrate rate 
+						on rate.pk_currinfo = info.pk_currinfo
+				where 
+					domesticCurrency.currtypecode = #{domesticCurrencyCode}
+					and foreignCurrency.currtypecode = #{foreignCurrencyCode}
+				order by rate.ratedate desc
+			) result 
+		where rownum=1
+    </select>
+    
+</mapper>  

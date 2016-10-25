@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.NC.CorporationDAO">  
+
+    <resultMap type="NC_Corporation" id="ncCorporationMap">
+    	<result property="BP1"                 column="BP1"                 />
+		<result property="BP2"                 column="BP2"                 />
+		<result property="CONADDR"             column="CONADDR"             />
+		<result property="CORRESPONDUNIT"      column="CORRESPONDUNIT"      />
+		<result property="CREATETIME"          column="CREATETIME"          />
+		<result property="CREATOR"             column="CREATOR"             />
+		<result property="CREDITMNY"           column="CREDITMNY"           />
+		<result property="CUSTCODE"            column="CUSTCODE"            />
+		<result property="CUSTNAME"            column="CUSTNAME"            />
+		<result property="CUSTPROP"            column="CUSTPROP"            />
+		<result property="CUSTSHORTNAME"       column="CUSTSHORTNAME"       />
+		<result property="DEF1"                column="DEF1"                />
+		<result property="DEF10"               column="DEF10"               />
+		<result property="DEF11"               column="DEF11"               />
+		<result property="DEF12"               column="DEF12"               />
+		<result property="DEF13"               column="DEF13"               />
+		<result property="DEF14"               column="DEF14"               />
+		<result property="DEF15"               column="DEF15"               />
+		<result property="DEF16"               column="DEF16"               />
+		<result property="DEF17"               column="DEF17"               />
+		<result property="DEF18"               column="DEF18"               />
+		<result property="DEF19"               column="DEF19"               />
+		<result property="DEF2"                column="DEF2"                />
+		<result property="DEF20"               column="DEF20"               />
+		<result property="DEF3"                column="DEF3"                />
+		<result property="DEF4"                column="DEF4"                />
+		<result property="DEF5"                column="DEF5"                />
+		<result property="DEF6"                column="DEF6"                />
+		<result property="DEF7"                column="DEF7"                />
+		<result property="DEF8"                column="DEF8"                />
+		<result property="DEF9"                column="DEF9"                />
+		<result property="DRPNODEFLAG"         column="DRPNODEFLAG"         />
+		<result property="ECOTYPESINCEVFIVE"   column="ECOTYPESINCEVFIVE"   />
+		<result property="EMAIL"               column="EMAIL"               />
+		<result property="ENGNAME"             column="ENGNAME"             />
+		<result property="FAX1"                column="FAX1"                />
+		<result property="FAX2"                column="FAX2"                />
+		<result property="FREECUSTFLAG"        column="FREECUSTFLAG"        />
+		<result property="ISCONNFLAG"          column="ISCONNFLAG"          />
+		<result property="LEGALBODY"           column="LEGALBODY"           />
+		<result property="LINKMAN1"            column="LINKMAN1"            />
+		<result property="LINKMAN2"            column="LINKMAN2"            />
+		<result property="LINKMAN3"            column="LINKMAN3"            />
+		<result property="MEMO"                column="MEMO"                />
+		<result property="MNECODE"             column="MNECODE"             />
+		<result property="MOBILEPHONE1"        column="MOBILEPHONE1"        />
+		<result property="MOBILEPHONE2"        column="MOBILEPHONE2"        />
+		<result property="MOBILEPHONE3"        column="MOBILEPHONE3"        />
+		<result property="MODIFIER"            column="MODIFIER"            />
+		<result property="MODIFYTIME"          column="MODIFYTIME"          />
+		<result property="PHONE1"              column="PHONE1"              />
+		<result property="PHONE2"              column="PHONE2"              />
+		<result property="PHONE3"              column="PHONE3"              />
+		<result property="PK_AREACL"           column="PK_AREACL"           />
+		<result property="PK_CORP"             column="PK_CORP"             />
+		<result property="PK_CORP1"            column="PK_CORP1"            />
+		<result property="PK_CUBASDOC"         column="PK_CUBASDOC"         />
+		<result property="PK_CUBASDOC1"        column="PK_CUBASDOC1"        />
+		<result property="PK_PRICEGROUP"       column="PK_PRICEGROUP"       />
+		<result property="REGISTERFUND"        column="REGISTERFUND"        />
+		<result property="SALEADDR"            column="SALEADDR"            />
+		<result property="SEALFLAG"            column="SEALFLAG"            />
+		<result property="TAXPAYERID"          column="TAXPAYERID"          />
+		<result property="TRADE"               column="TRADE"               />
+		<result property="TS"                  column="TS"                  />
+		<result property="URL"                 column="URL"                 />
+		<result property="ZIPCODE"             column="ZIPCODE"             />
+		<!-- Related attributes, from some other tables by join -->
+		<result property="PK_AREACL_NAME"      column="AREACLNAME"             />
+    </resultMap>  
+    
+    <sql id="ncCorporationColumn">
+    	cor.BP1,cor.BP2,
+    	cor.CONADDR,cor.CORRESPONDUNIT,
+    	cor.CREATETIME,cor.CREATOR,
+    	cor.CREDITMNY,cor.CUSTCODE,cor.CUSTNAME,
+    	cor.CUSTPROP,cor.CUSTSHORTNAME,
+    	cor.DEF1,cor.DEF10,cor.DEF11,cor.DEF12,cor.DEF13,cor.DEF14,cor.DEF15,cor.DEF16,cor.DEF17,cor.DEF18,cor.DEF19,cor.DEF2,cor.DEF20,cor.DEF3,cor.DEF4,cor.DEF5,cor.DEF6,cor.DEF7,cor.DEF8,cor.DEF9,
+    	cor.DRPNODEFLAG,cor.ECOTYPESINCEVFIVE,cor.EMAIL,cor.ENGNAME,
+    	cor.FAX1,cor.FAX2,cor.FREECUSTFLAG,cor.ISCONNFLAG,cor.LEGALBODY,
+    	cor.LINKMAN1,cor.LINKMAN2,cor.LINKMAN3,cor.MEMO,cor.MNECODE,
+    	cor.MOBILEPHONE1,cor.MOBILEPHONE2,cor.MOBILEPHONE3,cor.MODIFIER,cor.MODIFYTIME,
+    	cor.PHONE1,cor.PHONE2,cor.PHONE3,cor.PK_AREACL,
+    	cor.PK_CORP,cor.PK_CORP1,cor.PK_CUBASDOC,cor.PK_CUBASDOC1,cor.PK_PRICEGROUP,cor.REGISTERFUND,cor.SALEADDR,
+    	cor.SEALFLAG,cor.TAXPAYERID,cor.TRADE,cor.TS,cor.URL,cor.ZIPCODE
+    </sql>
+    <sql id="ncCorporationRelatedColumn">
+    	area.AREACLNAME
+    </sql>
+
+    <select id="selectCorporations" 
+    		parameterType="com.zhongzhou.Excavator.model.NC.CorporationSearchParameters"  
+    		resultMap="ncCorporationMap">
+		select 
+			<include refid="ncCorporationColumn"/>
+			,
+			<include refid="ncCorporationRelatedColumn"/>
+		from 
+		    BD_CUBASDOC cor
+			left join 
+				bd_areacl area 
+				on cor.pk_areacl = area.pk_areacl
+    </select> 
+    
+    <select id="countCorporations" 
+    		parameterType="com.zhongzhou.Excavator.model.NC.CorporationSearchParameters"  
+    		resultType="java.lang.Integer">
+		select 
+			count(*)
+		from 
+		    BD_CUBASDOC cor
+    </select> 
+    
+    
+    <select id="selectCorporationsWithRowNumber"
+    		parameterType="com.zhongzhou.Excavator.model.NC.CorporationSearchParameters"  
+    		resultMap="ncCorporationMap">
+		SELECT * 
+		FROM 
+			( 
+				SELECT 
+					result.*, ROWNUM RN 
+				FROM 
+					(
+						select 
+							<include refid="ncCorporationColumn"/>
+							,
+							<include refid="ncCorporationRelatedColumn"/>
+						from 
+		    				BD_CUBASDOC cor
+						left join 
+							bd_areacl area 
+							on cor.pk_areacl = area.pk_areacl 
+					) result 
+					WHERE ROWNUM &lt;= ${end} 
+			) 
+		WHERE RN &gt;= ${start}
+    </select> 
+</mapper>  

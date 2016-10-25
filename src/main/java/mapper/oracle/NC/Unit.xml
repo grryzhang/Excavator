@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.NC.UnitDAO">  
+    <resultMap type="NC_Unit" id="ncUnitMap">
+    	<result property="BASECODEFLAG"   column="BASECODEFLAG"  />
+		<result property="DR"             column="DR"            />
+		<result property="MEASNAME"       column="MEASNAME"      />
+		<result property="OPPDIMEN"       column="OPPDIMEN"      />
+		<result property="PK_MEASDOC"     column="PK_MEASDOC"    />
+		<result property="SCALEFACTOR"    column="SCALEFACTOR"   />
+		<result property="SHORTNAME"      column="SHORTNAME"     />
+		<result property="TS"             column="TS"            />
+    </resultMap>   
+    
+    <sql id="ncUnitColumns">
+   		unit.BASECODEFLAG,unit.DR,unit.MEASNAME,unit.OPPDIMEN,
+   		unit.PK_MEASDOC,unit.SCALEFACTOR,unit.SHORTNAME,unit.TS
+    </sql>
+    <sql id="ncUnitWhere">
+   		unit.PK_MEASDOC is not null
+   		<if test = "pk_measdoc != null">
+    		and unit.PK_MEASDOC = #{pk_measdoc}  
+        </if>
+    </sql>
+
+    <select id="selectUnit" resultMap="ncUnitMap">
+		select 
+			<include refid="ncUnitColumns"/>
+		from 
+			bd_measdoc unit
+		where
+			<include refid="ncUnitWhere"/>
+    </select>
+    
+</mapper>  

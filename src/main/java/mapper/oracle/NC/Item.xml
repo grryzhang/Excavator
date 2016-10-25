@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.NC.ItemDAO">  
+
+    <resultMap type="NC_ItemCategory" id="ncItemCategoryMap">
+    	<result property="ENDFLAG"          column="ENDFLAG"           />
+		<result property="FORINVNAME"       column="FORINVNAME"        />
+		<result property="INVCLASSCODE"     column="INVCLASSCODE"      />
+		<result property="INVCLASSLEV"      column="INVCLASSLEV"       />
+		<result property="INVCLASSNAME"     column="INVCLASSNAME"      />
+		<result property="ISELECTRANS"      column="ISELECTRANS"       />
+		<result property="PK_CORP"          column="PK_CORP"           />
+		<result property="PK_INVCL"         column="PK_INVCL"          />
+		<result property="TS"               column="TS"                />
+		<!-- Related Data from join action -->
+		<result property="PARENT_ID"        column="PARENT_ID"         />
+    </resultMap> 
+    
+   <resultMap type="NC_Item" id="ncItemMap">
+    	<result property="ASSET"             column="ASSET"             /> 
+		<result property="ASSISTUNIT"        column="ASSISTUNIT"        /> 
+		<result property="AUTOBALANCEMEAS"   column="AUTOBALANCEMEAS"   /> 
+		<result property="CREATETIME"        column="CREATETIME"        /> 
+		<result property="CREATOR"           column="CREATOR"           /> 
+		<result property="DEF1"              column="DEF1"              /> 
+		<result property="DEF10"             column="DEF10"             /> 
+		<result property="DEF11"             column="DEF11"             /> 
+		<result property="DEF12"             column="DEF12"             /> 
+		<result property="DEF13"             column="DEF13"             /> 
+		<result property="DEF14"             column="DEF14"             /> 
+		<result property="DEF15"             column="DEF15"             /> 
+		<result property="DEF16"             column="DEF16"             /> 
+		<result property="DEF17"             column="DEF17"             /> 
+		<result property="DEF18"             column="DEF18"             /> 
+		<result property="DEF19"             column="DEF19"             /> 
+		<result property="DEF2"              column="DEF2"              /> 
+		<result property="DEF20"             column="DEF20"             /> 
+		<result property="DEF3"              column="DEF3"              /> 
+		<result property="DEF4"              column="DEF4"              /> 
+		<result property="DEF5"              column="DEF5"              /> 
+		<result property="DEF6"              column="DEF6"              /> 
+		<result property="DEF7"              column="DEF7"              /> 
+		<result property="DEF8"              column="DEF8"              /> 
+		<result property="DEF9"              column="DEF9"              /> 
+		<result property="DISCOUNTFLAG"      column="DISCOUNTFLAG"      /> 
+		<result property="DR"                column="DR"                /> 
+		<result property="FORINVNAME"        column="FORINVNAME"        /> 
+		<result property="FREE1"             column="FREE1"             /> 
+		<result property="FREE2"             column="FREE2"             /> 
+		<result property="FREE3"             column="FREE3"             /> 
+		<result property="FREE4"             column="FREE4"             /> 
+		<result property="FREE5"             column="FREE5"             /> 
+		<result property="GRAPHID"           column="GRAPHID"           /> 
+		<result property="HEIGHT"            column="HEIGHT"            /> 
+		<result property="INVBARCODE"        column="INVBARCODE"        /> 
+		<result property="INVCODE"           column="INVCODE"           /> 
+		<result property="INVMNECODE"        column="INVMNECODE"        /> 
+		<result property="INVNAME"           column="INVNAME"           /> 
+		<result property="INVPINPAI"         column="INVPINPAI"         /> 
+		<result property="INVSHORTNAME"      column="INVSHORTNAME"      /> 
+		<result property="INVSPEC"           column="INVSPEC"           /> 
+		<result property="INVTYPE"           column="INVTYPE"           /> 
+		<result property="ISELECTRANS"       column="ISELECTRANS"       /> 
+		<result property="ISMNGSTOCKBYGRSWT" column="ISMNGSTOCKBYGRSWT" />
+		<result property="ISRETAIL"          column="ISRETAIL"          /> 
+		<result property="ISSTOREBYCONVERT"  column="ISSTOREBYCONVERT"  /> 
+		<result property="LABORFLAG"         column="LABORFLAG"         /> 
+		<result property="LENGTH"            column="LENGTH"            /> 
+		<result property="MEMO"              column="MEMO"              /> 
+		<result property="MODIFIER"          column="MODIFIER"          /> 
+		<result property="MODIFYTIME"        column="MODIFYTIME"        /> 
+		<result property="PK_ASSETCATEGORY"  column="PK_ASSETCATEGORY"  /> 
+		<result property="PK_CORP"           column="PK_CORP"           /> 
+		<result property="PK_INVBASDOC"      column="PK_INVBASDOC"      /> 
+		<result property="PK_INVCL"          column="PK_INVCL"          /> 
+		<result property="PK_MEASDOC"        column="PK_MEASDOC"        /> 
+		<result property="PK_MEASDOC1"       column="PK_MEASDOC1"       /> 
+		<result property="PK_MEASDOC2"       column="PK_MEASDOC2"       /> 
+		<result property="PK_MEASDOC3"       column="PK_MEASDOC3"       /> 
+		<result property="PK_MEASDOC5"       column="PK_MEASDOC5"       /> 
+		<result property="PK_MEASDOC6"       column="PK_MEASDOC6"       /> 
+		<result property="PK_PRODLINE"       column="PK_PRODLINE"       /> 
+		<result property="PK_TAXITEMS"       column="PK_TAXITEMS"       /> 
+		<result property="SEALFLAG"          column="SEALFLAG"          /> 
+		<result property="SETPARTSFLAG"      column="SETPARTSFLAG"      /> 
+		<result property="SHIPUNITNUM"       column="SHIPUNITNUM"       /> 
+		<result property="STOREUNITNUM"      column="STOREUNITNUM"      /> 
+		<result property="TS"                column="TS"                /> 
+		<result property="UNITVOLUME"        column="UNITVOLUME"        /> 
+		<result property="UNITWEIGHT"        column="UNITWEIGHT"        /> 
+		<result property="WEITUNITNUM"       column="WEITUNITNUM"       /> 
+		<result property="WIDTH"             column="WIDTH"             /> 
+		
+		<!-- Joined column -->
+		<result property="corpUNITCODE"      column="corpUNITCODE"      />   
+    </resultMap> 
+    
+    <resultMap type="NC_ItemManage" id="ncItemManageMap">
+    	<result property="ABCTYPE"                      column="ABCTYPE"                 />   
+		<result property="ACCFLAG"                      column="ACCFLAG"                 />   
+		<result property="CINVMNECODE"                  column="CINVMNECODE"             />   
+		<result property="CONSUMESETTLEFLAG"            column="CONSUMESETTLEFLAG"       />   
+		<result property="COOPDAYFROM"                  column="COOPDAYFROM"             />   
+		<result property="COOPDAYTO"                    column="COOPDAYTO"               />   
+		<result property="COSTPRICE"                    column="COSTPRICE"               />   
+		<result property="CREATETIME"                   column="CREATETIME"              />   
+		<result property="CREATOR"                      column="CREATOR"                 />   
+		<result property="DEF1"                         column="DEF1"                    />   
+		<result property="DEF10"                        column="DEF10"                   />   
+		<result property="DEF11"                        column="DEF11"                   />   
+		<result property="DEF12"                        column="DEF12"                   />   
+		<result property="DEF13"                        column="DEF13"                   />   
+		<result property="DEF14"                        column="DEF14"                   />   
+		<result property="DEF15"                        column="DEF15"                   />   
+		<result property="DEF16"                        column="DEF16"                   />   
+		<result property="DEF17"                        column="DEF17"                   />   
+		<result property="DEF18"                        column="DEF18"                   />   
+		<result property="DEF19"                        column="DEF19"                   />   
+		<result property="DEF2"                         column="DEF2"                    />   
+		<result property="DEF20"                        column="DEF20"                   />   
+		<result property="DEF3"                         column="DEF3"                    />   
+		<result property="DEF4"                         column="DEF4"                    />   
+		<result property="DEF5"                         column="DEF5"                    />   
+		<result property="DEF6"                         column="DEF6"                    />   
+		<result property="DEF7"                         column="DEF7"                    />   
+		<result property="DEF8"                         column="DEF8"                    />   
+		<result property="DEF9"                         column="DEF9"                    />   
+		<result property="DR"                           column="DR"                      />   
+		<result property="EXPAYBACKTAX"                 column="EXPAYBACKTAX"            />   
+		<result property="FREE1"                        column="FREE1"                   />   
+		<result property="FREE2"                        column="FREE2"                   />   
+		<result property="FREE3"                        column="FREE3"                   />   
+		<result property="FREE4"                        column="FREE4"                   />   
+		<result property="FREE5"                        column="FREE5"                   />   
+		<result property="GRADE"                        column="GRADE"                   />   
+		<result property="INVLIFEPERIOD"                column="INVLIFEPERIOD"           />   
+		<result property="ISAPPENDANT"                  column="ISAPPENDANT"             />   
+		<result property="ISAUTOATPCHECK"               column="ISAUTOATPCHECK"          />   
+		<result property="ISCANCALCULATEDINVCOST"       column="ISCANCALCULATEDINVCOST"  />   
+		<result property="ISCANPURCHASED"               column="ISCANPURCHASED"          />   
+		<result property="ISCANSALEINVOICE"             column="ISCANSALEINVOICE"        />   
+		<result property="ISCANSOLD"                    column="ISCANSOLD"               />   
+		<result property="ISCONFIGABLE"                 column="ISCONFIGABLE"            />   
+		<result property="ISCTLPRODPLANPRICE"           column="ISCTLPRODPLANPRICE"      />   
+		<result property="ISFATHEROFBOM"                column="ISFATHEROFBOM"           />   
+		<result property="ISINVRETFREEOFCHK"            column="ISINVRETFREEOFCHK"       />   
+		<result property="ISINVRETINSTOBYCHK"           column="ISINVRETINSTOBYCHK"      />   
+		<result property="ISINVRETURNED"                column="ISINVRETURNED"           />   
+		<result property="ISNOCONALLOWED"               column="ISNOCONALLOWED"          />   
+		<result property="ISPRIMARYBARCODE"             column="ISPRIMARYBARCODE"        />   
+		<result property="ISRECURRENTCHECK"             column="ISRECURRENTCHECK"        />   
+		<result property="ISSALABLE"                    column="ISSALABLE"               />   
+		<result property="ISSECONDARYBARCODE"           column="ISSECONDARYBARCODE"      />   
+		<result property="ISSELFAPPRSUPPLIER"           column="ISSELFAPPRSUPPLIER"      />   
+		<result property="ISSPECIALTY"                  column="ISSPECIALTY"             />   
+		<result property="ISSUPPLIERSTOCK"              column="ISSUPPLIERSTOCK"         />   
+		<result property="ISUSED"                       column="ISUSED"                  />   
+		<result property="ISVIRTUAL"                    column="ISVIRTUAL"               />   
+		<result property="KEEPWASTERATE"                column="KEEPWASTERATE"           />   
+		<result property="LOWESTPRICE"                  column="LOWESTPRICE"             />   
+		<result property="MANTAXITEM"                   column="MANTAXITEM"              />   
+		<result property="MAXPRICE"                     column="MAXPRICE"                />   
+		<result property="MEMO"                         column="MEMO"                    />   
+		<result property="MODIFIER"                     column="MODIFIER"                />   
+		<result property="MODIFYTIME"                   column="MODIFYTIME"              />   
+		<result property="NEGALLOWED"                   column="NEGALLOWED"              />   
+		<result property="OUTPRIORITY"                  column="OUTPRIORITY"             />   
+		<result property="OUTTRACKIN"                   column="OUTTRACKIN"              />   
+		<result property="PEBEGIN"                      column="PEBEGIN"                 />   
+		<result property="PEEND"                        column="PEEND"                   />   
+		<result property="PK_CORP"                      column="PK_CORP"                 />   
+		<result property="PK_CUMANDOC"                  column="PK_CUMANDOC"             />   
+		<result property="PK_DFTFACTORY"                column="PK_DFTFACTORY"           />   
+		<result property="PK_INVBASDOC"                 column="PK_INVBASDOC"            />   
+		<result property="PK_INVMANDOC"                 column="PK_INVMANDOC"            />   
+		<result property="PK_SEALUSER"                  column="PK_SEALUSER"             />   
+		<result property="PLANPRICE"                    column="PLANPRICE"               />   
+		<result property="PRODAREA"                     column="PRODAREA"                />   
+		<result property="PURCHASESTGE"                 column="PURCHASESTGE"            />   
+		<result property="PURWASTERATE"                 column="PURWASTERATE"            />   
+		<result property="QUALITYDAYNUM"                column="QUALITYDAYNUM"           />   
+		<result property="QUALITYMANFLAG"               column="QUALITYMANFLAG"          />   
+		<result property="QUALITYPERIODUNIT"            column="QUALITYPERIODUNIT"       />   
+		<result property="RECURRENTCHKCYC"              column="RECURRENTCHKCYC"         />   
+		<result property="REFSALEPRICE"                 column="REFSALEPRICE"            />   
+		<result property="SEALDATE"                     column="SEALDATE"                />   
+		<result property="SEALFLAG"                     column="SEALFLAG"                />   
+		<result property="SELLPROXYFLAG"                column="SELLPROXYFLAG"           />   
+		<result property="SERIALMANAFLAG"               column="SERIALMANAFLAG"          />   
+		<result property="TS"                           column="TS"                      />   
+		<result property="WHOLEMANAFLAG"                column="WHOLEMANAFLAG"           />   
+    </resultMap> 
+    
+    <sql id="ncItemCategoryColumn">
+    	invcl1.ENDFLAG,invcl1.FORINVNAME,
+    	invcl1.INVCLASSCODE,invcl1.INVCLASSLEV,invcl1.INVCLASSNAME,invcl1.ISELECTRANS,
+    	invcl1.PK_CORP,invcl1.PK_INVCL,invcl1.TS
+    </sql>
+	<sql id="ncItemCategoryRelatedColumn">
+    	INVCL2.PK_INVCL as PARENT_ID 
+    </sql>
+    
+    <sql id="ncItemColumn">
+    	item.ASSET,item.ASSISTUNIT,item.AUTOBALANCEMEAS,item.CREATETIME,
+    	item.CREATOR,
+    	item.DEF1,item.DEF10,item.DEF11,item.DEF12,item.DEF13,item.DEF14,item.DEF15,item.DEF16,
+    	item.DEF17,item.DEF18,item.DEF19,item.DEF2,item.DEF20,item.DEF3,item.DEF4,item.DEF5,
+    	item.DEF6,item.DEF7,item.DEF8,item.DEF9,
+    	item.DISCOUNTFLAG,item.DR,item.FORINVNAME,
+    	item.FREE1,item.FREE2,item.FREE3,item.FREE4,item.FREE5,
+    	item.GRAPHID,item.HEIGHT,item.INVBARCODE,item.INVCODE,item.INVMNECODE,
+    	item.INVNAME,item.INVPINPAI,item.INVSHORTNAME,item.INVSPEC,item.INVTYPE,
+    	item.ISELECTRANS,item.ISMNGSTOCKBYGRSWT,item.ISRETAIL,item.ISSTOREBYCONVERT,
+    	item.LABORFLAG,item.LENGTH,item.MEMO,item.MODIFIER,item.MODIFYTIME,
+    	item.PK_ASSETCATEGORY,item.PK_CORP,item.PK_INVBASDOC,item.PK_INVCL,
+    	item.PK_MEASDOC,item.PK_MEASDOC1,item.PK_MEASDOC2,item.PK_MEASDOC3,
+    	item.PK_MEASDOC5,item.PK_MEASDOC6,item.PK_PRODLINE,item.PK_TAXITEMS,
+    	item.SEALFLAG,item.SETPARTSFLAG,item.SHIPUNITNUM,item.STOREUNITNUM,item.TS,
+    	item.UNITVOLUME,item.UNITWEIGHT,item.WEITUNITNUM,item.WIDTH,
+    	corp.UNITCODE as corpUNITCODE
+    </sql>
+    <sql id="ncItemWhere">
+    	item.PK_INVBASDOC is not null
+    	<if test = "pkInvbasdocs != null and pkInvbasdocs.size() &gt; 0 ">
+            and item.pk_invbasdoc in 
+            <foreach item="item" index="index" collection="pkInvbasdocs" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+        </if>
+        <if test = "invTypes != null and invTypes.size() &gt; 0 ">
+            and item.invType in 
+            <foreach item="item" index="index" collection="invTypes" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+        </if>
+    	<if test = "updateTimeStart != null">
+    		and to_timestamp(item.TS,'yyyy-mm-dd hh24:mi:ss') &gt;= #{updateTimeStart}  
+        </if>
+        <if test = "updateTimeEnd != null">
+        	and to_timestamp(item.TS,'yyyy-mm-dd hh24:mi:ss') &gt;= #{updateTimeEnd}  
+        </if>
+    </sql>
+    
+    
+    <sql id="ncItemManageColumn">
+    	itemM.ABCTYPE,itemM.ACCFLAG,itemM.CINVMNECODE,itemM.CONSUMESETTLEFLAG,
+    	itemM.COOPDAYFROM,itemM.COOPDAYTO,itemM.COSTPRICE,itemM.CREATETIME,itemM.CREATOR,
+    	itemM.DEF1,itemM.DEF10,itemM.DEF11,itemM.DEF12,itemM.DEF13,itemM.DEF14,itemM.DEF15,itemM.DEF16,
+    	itemM.DEF17,itemM.DEF18,itemM.DEF19,itemM.DEF2,itemM.DEF20,itemM.DEF3,itemM.DEF4,itemM.DEF5,itemM.DEF6,
+    	itemM.DEF7,itemM.DEF8,itemM.DEF9,itemM.DR,itemM.EXPAYBACKTAX,
+    	itemM.FREE1,itemM.FREE2,itemM.FREE3,itemM.FREE4,itemM.FREE5,
+    	itemM.GRADE,itemM.INVLIFEPERIOD,itemM.ISAPPENDANT,itemM.ISAUTOATPCHECK,
+    	itemM.ISCANCALCULATEDINVCOST,itemM.ISCANPURCHASED,itemM.ISCANSALEINVOICE,itemM.ISCANSOLD,
+    	itemM.ISCONFIGABLE,itemM.ISCTLPRODPLANPRICE,itemM.ISFATHEROFBOM,itemM.ISINVRETFREEOFCHK,
+    	itemM.ISINVRETINSTOBYCHK,itemM.ISINVRETURNED,itemM.ISNOCONALLOWED,itemM.ISPRIMARYBARCODE,
+    	itemM.ISRECURRENTCHECK,itemM.ISSALABLE,itemM.ISSECONDARYBARCODE,itemM.ISSELFAPPRSUPPLIER,
+    	itemM.ISSPECIALTY,itemM.ISSUPPLIERSTOCK,itemM.ISUSED,itemM.ISVIRTUAL,itemM.KEEPWASTERATE,
+    	itemM.LOWESTPRICE,itemM.MANTAXITEM,itemM.MAXPRICE,itemM.MEMO,itemM.MODIFIER,itemM.MODIFYTIME,
+    	itemM.NEGALLOWED,itemM.OUTPRIORITY,itemM.OUTTRACKIN,itemM.PEBEGIN,itemM.PEEND,itemM.PK_CORP,
+    	itemM.PK_CUMANDOC,itemM.PK_DFTFACTORY,itemM.PK_INVBASDOC,itemM.PK_INVMANDOC,itemM.PK_SEALUSER,
+    	itemM.PLANPRICE,itemM.PRODAREA,itemM.PURCHASESTGE,itemM.PURWASTERATE,itemM.QUALITYDAYNUM,
+    	itemM.QUALITYMANFLAG,itemM.QUALITYPERIODUNIT,itemM.RECURRENTCHKCYC,itemM.REFSALEPRICE,
+    	itemM.SEALDATE,itemM.SEALFLAG,itemM.SELLPROXYFLAG,itemM.SERIALMANAFLAG,itemM.TS,itemM.WHOLEMANAFLAG
+    </sql>
+    
+    <select id="selectItemsWithRowNumber"
+    		parameterType="NC_ItemSearchParameters"  
+    		resultMap="ncItemMap">
+		SELECT * 
+		FROM 
+			( 
+				SELECT 
+					result.*, ROWNUM RN 
+				FROM 
+					(
+						select 
+							<include refid="ncItemColumn"/>
+						from 
+    						BD_INVBASDOC item
+ 							left join 
+ 								bd_invmandoc itemM 
+ 							on 
+ 								itemM.pk_invbasdoc = item.pk_invbasdoc
+ 							left join 
+ 								bd_corp corp 
+ 							on 
+ 								corp.pk_corp = itemM.pk_corp
+    					where
+    						<include refid="ncItemWhere"/>
+					) result 
+					WHERE ROWNUM &lt;= ${end} 
+			) 
+		WHERE RN &gt;= ${start}
+    </select>
+    
+    <select id="selectItems"
+    		parameterType="NC_ItemSearchParameters"  
+    		resultMap="ncItemMap">
+		select 
+			<include refid="ncItemColumn"/>
+		from 
+    		BD_INVBASDOC item
+    		left join 
+ 				bd_invmandoc itemM 
+ 			on 
+ 				itemM.pk_invbasdoc = item.pk_invbasdoc
+ 			left join 
+ 				bd_corp corp 
+ 			on 
+ 				corp.pk_corp = itemM.pk_corp
+    	where
+    		<include refid="ncItemWhere"/>			
+    </select>
+    
+    <select id="countItems"  
+    		parameterType="NC_ItemSearchParameters"  
+    		resultType="java.lang.Integer">
+		select 
+			count(*)
+		from 
+    		BD_INVBASDOC item
+ 			left join 
+ 				bd_invmandoc itemM 
+ 			on 
+ 				itemM.pk_invbasdoc = item.pk_invbasdoc
+ 			left join 
+ 				bd_corp corp 
+ 			on 
+ 				corp.pk_corp = itemM.pk_corp
+    	where
+    		<include refid="ncItemWhere"/>
+    </select> 
+    
+    
+    
+    <select id="selectItemCategorys"  
+    		resultMap="ncItemCategoryMap">
+		select 
+			<include refid="ncItemCategoryColumn"/>
+			,
+			<include refid="ncItemCategoryRelatedColumn"/>
+		from 
+    		bd_invcl invcl1
+		left join 
+    		bd_invcl INVCL2 
+    		on 
+    		INVCL1.INVCLASSLEV = INVCL2.INVCLASSLEV + 1
+    		and  instr(INVCL1.INVCLASSCODE, INVCL2.INVCLASSCODE) = 1
+		order by invcl1.invclasscode
+    </select>
+    
+    <select id="selectItemCategorysWithRowNumber"
+    		parameterType="NC_ItemCategorySearchParameters"  
+    		resultMap="ncItemCategoryMap">
+		SELECT * 
+		FROM 
+			( 
+				SELECT 
+					result.*, ROWNUM RN 
+				FROM 
+					(
+						select 
+							<include refid="ncItemCategoryColumn"/>
+							,
+							<include refid="ncItemCategoryRelatedColumn"/>
+						from 
+    						bd_invcl invcl1
+						left join 
+    						bd_invcl INVCL2 
+    						on 
+    						INVCL1.INVCLASSLEV = INVCL2.INVCLASSLEV + 1
+    						and  instr(INVCL1.INVCLASSCODE, INVCL2.INVCLASSCODE) = 1
+						order by invcl1.invclasscode
+					) result 
+					WHERE ROWNUM &lt;= ${end} 
+			) 
+		WHERE RN &gt;= ${start}
+    </select>
+    
+    <select id="countItemCategorys"  
+    		resultType="java.lang.Integer">
+		select 
+			count(*)
+		from 
+		    bd_invcl ic
+    </select> 
+    
+    
+    <update id="updateItemsPackageInfo" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close="end;" >
+        	<if test = "item.INVCODE != null">
+        		update BD_INVBASDOC
+            	set
+            		<if test = "item.DEF11 != null">
+                		DEF11 = #{item.DEF11},
+                	</if>
+                	<if test = "item.DEF10 != null">
+                		DEF10 = #{item.DEF10},
+                	</if>
+                	<if test = "item.DEF7 != null">
+                		DEF7  = #{item.DEF7},
+                	</if>
+                	<if test = "item.DEF8 != null">
+                		DEF8  = #{item.DEF8},
+                	</if>
+                	<if test = "item.DEF9 != null">
+                		DEF9  = #{item.DEF9},
+                	</if>
+                	invcode = #{item.INVCODE}
+            	where invcode = #{item.INVCODE};
+        	</if>
+        </foreach>
+    </update>
+    
+    <update id="updateItemsCustomInfo" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="begin" close="end;" >
+        	<if test = "item.INVCODE != null">
+        		update BD_INVBASDOC
+            	set
+            		<if test = "item.DEF1 != null">
+                		DEF1 = #{item.DEF1},
+                	</if>
+                	<if test = "item.DEF2 != null">
+                		DEF2 = #{item.DEF2},
+                	</if>
+                	<if test = "item.DEF3 != null">
+                		DEF3  = #{item.DEF3},
+                	</if>
+                	<if test = "item.DEF4 != null">
+                		DEF4  = #{item.DEF4},
+                	</if>
+                	<if test = "item.DEF5 != null">
+                		DEF5  = #{item.DEF5},
+                	</if>
+                	<if test = "item.DEF6 != null">
+                		DEF6  = #{item.DEF6},
+                	</if>
+                	invcode = #{item.INVCODE}
+            	where invcode = #{item.INVCODE};
+        	</if>
+        </foreach>
+    </update>
+</mapper>  

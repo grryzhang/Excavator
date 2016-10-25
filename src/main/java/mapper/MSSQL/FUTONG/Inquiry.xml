@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.MSSQL.FUTONG.InquiryDAO">  
+	
+	<resultMap type="Inquiry" id="inquiryMap">
+		<result property="id"                   column="id"						/>
+		<result property="inquiryNumber"     	column="inquiry_number"         />
+		<result property="customerName"         column="customer_name"      	/>
+		<result property="customerBuyer"      	column="customer_buyer"     	/>
+		<result property="inquiryOperator"      column="inquiry_operator"   	/>
+		<result property="inquiryDate"          column="inquiry_date"         	/>
+		<result property="payMode"          	column="pay_mode"               />
+		<result property="shipmentPort"         column="shipment_port"      	/>
+		<result property="dischargePort"        column="discharge_port"         />
+		<result property="currencyId"           column="item_id"         		/>
+		<result property="currencyName"         column="currency_name"          />
+		<result property="status"         		column="status"         		/>
+		<result property="priceTerm"         	column="price_term"         	/>
+		<collection property="inquiryItems" ofType="InquiryItem" javaType="list" column="id">   
+			
+			<id 	property="tempItemNumber"       column="temp_item_number"       	/>
+			<id 	property="customerItemCode"     column="customer_item_code"     	/>
+			<id		property="itemEname"            column="item_e_name"            	/>
+			<id		property="itemUnit"             column="item_unit"              	/>
+			<id	    property="itemEDescription"     column="item_e_description"     	/>
+			<id	    property="itemSpecification"    column="item_specification"    		/>
+			<result property="inquiryId"     		column="id"    						/>
+			<result property="minOrderNumber"       column="inquiry_min_order_number" 	/>
+			<result property="purchaseNumber"      	column="purchase_number"     		/>
+			
+			<collection property="quoteItems" ofType="QuoteItem" javaType="list">
+				<result	property="tempItemNumber"         column="temp_item_number"     />
+				<result property="customerItemCode"       column="customer_item_code"   />
+				<result property="itemCName"      		  column="item_c_name"    		/>
+				<result property="itemCDescription"       column="item_c_description"   />
+				<result property="unitPrice"        	  column="unit_price"			/>
+				<result property="unitFobPrice"        	  column="unit_fob_price"		/>
+				<result property="qualityGuarantee"       column="quality_guarantee"	/>
+				<result property="validPeriod"       	  column="valid_period"			/>
+				<result property="validDate"       	  	  column="valid_date"			/>
+				<result property="currencyName"       	  column="currency_name"		/>
+				<result property="supplierName"       	  column="supplier_name"		/>
+				<result property="minOrderNumber"         column="min_order_number" 	/>
+			</collection>
+        </collection>
+    </resultMap>  
+    
+    <sql id="inquiryHeadColumn">
+    	quote.QuotedNo as inquiry_number,
+    	CASE
+			WHEN LEN(customer.CustName) &lt; 1 then null
+			ELSE customer.CustName
+		end as customer_name,
+		CASE
+			WHEN LEN(quote.Linker) &lt; 1 then null
+			ELSE quote.Linker 
+		end as customer_buyer,
+		CASE
+			WHEN LEN(quote.opName) &lt; 1 then null
+			ELSE quote.opName
+		end as inquiry_operator,
+		CASE
+			WHEN LEN(quote.quotedDate) &lt; 1 then null
+			ELSE quote.quotedDate
+		end as inquiry_date,
+		CASE
+			WHEN LEN(quote.payMode) &lt; 1 then null
+			ELSE quote.payMode
+		end as pay_mode,
+		CASE
+			WHEN LEN(quote.startPlace) &lt; 1 then null
+			ELSE quote.startPlace
+		end as shipment_port,
+		CASE
+			WHEN LEN(quote.endPlace) &lt; 1 then null
+			ELSE quote.endPlace
+		end as discharge_port,
+		CASE
+			WHEN LEN(currency.emoneyname) &lt; 1 then null
+			ELSE currency.emoneyname
+		end as currency_name,
+		CASE
+			WHEN LEN(quote.status) &lt; 1 then null
+			ELSE quote.status
+		end as status,
+		CASE
+			WHEN LEN(dict.dictvalue) &lt; 1 then null
+			ELSE dict.dictvalue
+		end as price_term,
+		
+		CASE
+			WHEN LEN(product.GoodsCode) &lt; 1 then null
+			ELSE product.GoodsCode
+		end as temp_item_number,
+		CASE
+			WHEN LEN(product.CustGoodsCode) &lt; 1 then null
+			ELSE product.CustGoodsCode
+		end as customer_item_code,
+		CASE
+			WHEN LEN(product.GoodsCName) &lt; 1 then null
+			ELSE product.GoodsCName
+		end as item_c_name,
+		CASE
+			WHEN LEN(product.GoodsEName) &lt; 1 then null
+			ELSE product.GoodsEName
+		end as item_e_name,
+		CASE
+			WHEN LEN(product.GoodsCDESC) &lt; 1 then null
+			ELSE product.GoodsCDESC
+		end as item_c_description,
+		CASE
+			WHEN LEN(product.GoodsEDESC) &lt; 1 then null
+			ELSE product.GoodsEDESC
+		end as item_e_description,
+		CASE
+			WHEN LEN(product.GoodsSpec) &lt; 1 then null
+			ELSE product.GoodsSpec
+		end as item_specification,
+		CASE
+			WHEN LEN(product.GoodsUnit) &lt; 1 then null
+			ELSE product.GoodsUnit
+		end as item_unit,
+		CASE
+			WHEN LEN(product.goodsNum) &lt; 1 then null
+			ELSE product.goodsNum
+		end as purchase_number,
+		CASE
+			WHEN LEN(product.minOrder) &lt; 1 then null
+			ELSE product.minOrder
+		end as inquiry_min_order_number,
+		
+		CASE
+			WHEN LEN( product_ex.unitPrice ) &lt; 1 then null
+			ELSE product_ex.unitPrice
+		end as unit_price,
+		CASE
+			WHEN LEN( product_ex.fobPrice ) &lt; 1 then null
+			ELSE product_ex.fobPrice
+		end as unit_fob_price,
+		CASE
+			WHEN LEN( product_pro.[其它.质保] ) &lt; 1 then null
+			ELSE product_pro.[其它.质保]
+		end as quality_guarantee,
+		CASE
+			WHEN LEN( quote.validPeriod ) &lt; 1 then null
+			ELSE quote.validPeriod
+		end as valid_period,
+		CASE
+			WHEN LEN( quote.limitPeriod ) &lt; 1 then null
+			ELSE quote.limitPeriod
+		end as valid_date,
+		CASE
+			WHEN LEN( product.supplyerName ) &lt; 1 then null
+			ELSE product.supplyerName
+		end as supplier_name,
+		CASE
+			WHEN LEN( product.minOrder ) &lt; 1 then null
+			ELSE product.minOrder 
+		end as min_order_number
+    </sql>
+    <sql id="inquiryMappingWhere">
+    	quote.QuotedNo is not null
+        <if test = "inquiryNumbers != null and inquiryNumbers.size() &gt; 0 ">
+            and quote.QuotedNo in 
+            <foreach item="item" index="index" collection="inquiryNumbers" open="(" separator="," close=")">  
+           		#{item}  
+            </foreach>
+        </if>
+    </sql>
+    
+    <select id="selectActiveInquiryFromFUTONG"    
+    		parameterType="InquirySearchParameters" 
+    		resultMap="inquiryMap">
+
+    	select * from (
+    		select row_number() over ( order by tempcolumn) temprownumber, * from (
+				select 
+					top (#{start}+#{limit}) tempcolumn=0,
+					<include refid="inquiryHeadColumn"/>
+				from 
+					quoted_info quote
+					left join 
+						cust_info customer
+						on 
+							customer.id = quote.CustOpCode
+					left join  
+						Dict_Currency currency 
+						on 
+							quote.moneyKindid = currency.id
+					left join 
+						quoted_product_info product 
+						on 
+							quote.id = product.quotedid and product.status=0
+					left join  
+						Dict_Normal dict 
+						on 
+							dict.dictType =6 and quote.priceTermid = dict.dictKey
+					left join 
+						quoted_product_infoex product_ex 
+						on 
+							product.quotedProductId=product_ex.quotedProductId
+					left join 
+						quoted_product_property product_pro
+						on 
+							product.quotedProductId=product_pro.mainid
+				where
+					quote.status = 0
+					and
+					<include refid="inquiryMappingWhere"/>
+			) tempresult  
+		) tempresult1 where temprownumber > #{start}
+    </select> 
+    
+    <select id="countActiveInquiryAtQuoteLevelFromFUTONG"     
+    		resultType="java.lang.Integer">
+		select 
+			count(*)
+		from 
+			quoted_info quote
+			left join 
+				cust_info customer
+				on 
+					customer.id = quote.CustOpCode
+			left join  
+				Dict_Currency currency 
+				on 
+					quote.moneyKindid = currency.id
+			left join 
+				quoted_product_info product 
+				on 
+					quote.id = product.quotedid and product.status=0
+			left join  
+				Dict_Normal dict 
+				on 
+					dict.dictType =6 and quote.priceTermid = dict.dictKey
+			left join 
+				quoted_product_infoex product_ex 
+				on 
+					product.quotedProductId=product_ex.quotedProductId
+			left join 
+				quoted_product_property product_pro
+				on 
+					product.quotedProductId=product_pro.mainid
+		where
+			quote.status = 0
+			and
+			<include refid="inquiryMappingWhere"/>
+    </select> 
+    
+</mapper>  

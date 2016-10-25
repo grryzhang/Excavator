@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.MD.InquiryDAO">  
+	
+	<resultMap type="Inquiry" id="inquiryMap">
+		<result property="id"                   column="id"						/>
+		<result property="inquiryNumber"     	column="inquiry_number"         />
+		<result property="customerName"         column="customer_name"      	/>
+		<result property="customerBuyer"      	column="customer_buyer"     	/>
+		<result property="inquiryOperator"      column="inquiry_operator"   	/>
+		<result property="inquiryDate"          column="inquiry_date"         	/>
+		<result property="payMode"          	column="pay_mode"               />
+		<result property="shipmentPort"         column="shipment_port"      	/>
+		<result property="dischargePort"        column="discharge_port"         />
+		<result property="currencyId"           column="item_id"         		/>
+		<result property="currencyName"         column="currency_name"          />
+		<result property="status"         		column="status"         		/>
+		<result property="priceTerm"         	column="price_term"         	/>
+		<collection property="inquiryItems" ofType="InquiryItem" javaType="list" column="id">   
+            <id     property="id"                  	column="inquiry_item_id"			/>
+			<result property="inquiryId"     		column="inquiry_id"    				/>
+			<result property="tempItemNumber"       column="temp_item_number"       	/>
+			<result property="customerItemCode"     column="customer_item_code"     	/>
+			<result property="itemEname"            column="item_e_name"            	/>
+			<result property="itemEDescription"     column="item_e_description"     	/>
+			<result property="itemSpecification"    column="item_specification"    		/>
+			<result property="itemUnit"             column="item_unit"              	/>
+			<result property="minOrderNumber"       column="inquiry_min_order_number" 	/>
+			<result property="purchaseNumber"      	column="purchase_number"     		/>
+			
+			<collection property="quoteItems" ofType="QuoteItem" javaType="list" column="inquiry_item_id">
+				<id     property="id"                     column="quote_item_id"		/>
+				<result property="inquiryItemId"          column="inquiry_item_id"		/>
+				<result	property="tempItemNumber"         column="temp_item_number"     />
+				<result property="customerItemCode"       column="customer_item_code"   />
+				<result property="itemCName"      		  column="item_c_name"    		/>
+				<result property="itemCDescription"       column="item_c_description"   />
+				<result property="unitPrice"        	  column="unit_price"			/>
+				<result property="unitFobPrice"        	  column="unit_fob_price"		/>
+				<result property="qualityGuarantee"       column="quality_guarantee"	/>
+				<result property="validPeriod"       	  column="valid_period"			/>
+				<result property="validDate"       	  	  column="valid_date"			/>
+				<result property="currencyId"       	  column="currency_id"		    />
+				<result property="supplierName"       	  column="supplier_name"		/>
+				<result property="minOrderNumber"         column="min_order_number"		/>
+			</collection>
+        </collection>
+    </resultMap>  
+    
+    <sql id="inquiriesColumn">
+    	inquiry.id as id,
+    	inquiry.inquiry_number,
+		inquiry.customer_name,
+		inquiry.customer_buyer,
+		inquiry.inquiry_operator,
+		inquiry.inquiry_date,
+		inquiry.pay_mode,
+		inquiry.shipment_port,
+		inquiry.discharge_port,
+		inquiry.currency_id,
+		inquiry.status,
+		inquiry.price_term,
+		
+		inquiry_item.id as inquiry_item_id,
+		inquiry_item.inquiry_id as inquiry_id,
+		inquiry_item.temp_item_number,
+		inquiry_item.customer_item_code,
+		inquiry_item.item_e_name,
+		inquiry_item.item_e_description,
+		inquiry_item.item_specification,
+		inquiry_item.item_unit,
+		inquiry_item.purchase_number,
+		inquiry_item.inquiry_min_order_number,
+		
+		quote_item.id as quote_item_id,
+		quote_item.inquiry_item_id as inquiry_item_id,
+		quote_item.unit_price,
+		quote_item.unit_fob_price,
+		quote_item.quality_guarantee,
+		quote_item.valid_period,
+		quote_item.valid_date,
+		quote_item.supplier_name,
+		quote_item.currency_id,
+		quote_item.min_order_number
+    </sql>
+    <sql id="inquiryMappingWhere">
+    	inquiry.inquiry_number is not null
+    	<if test = "ids != null and ids.size() &gt; 0 ">
+            and inquiry.id in 
+            <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+           		#{item}  
+            </foreach>
+        </if>
+        <if test = "inquiryNumbers != null and inquiryNumbers.size() &gt; 0 ">
+            and inquiry.inquiry_number in 
+            <foreach item="item" index="index" collection="inquiryNumbers" open="(" separator="," close=")">  
+           		#{item}  
+            </foreach>
+        </if>
+    </sql>
+    
+    <insert id="insertInquiries" parameterType="java.util.List">
+        insert into inquiry
+        (
+        	id,
+    		inquiry_number,
+			customer_name,
+			customer_buyer,
+			inquiry_operator,
+			inquiry_date,
+			pay_mode,
+			shipment_port,
+			discharge_port,
+			currency_id,
+			status,
+			price_term
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	#{item.inquiryNumber},
+        	#{item.customerName},
+        	#{item.customerBuyer},
+        	#{item.inquiryOperator},
+        	#{item.inquiryDate},
+        	#{item.payMode},
+        	#{item.shipmentPort},
+        	#{item.dischargePort},
+        	cast( #{item.currencyId} as uuid ),
+        	#{item.status},
+        	#{item.priceTerm}
+       	)
+       	</foreach>
+    </insert>
+
+    <insert id="insertInquiryItems" parameterType="java.util.List">
+        insert into inquiry_item
+        (
+	        id,
+			inquiry_id,
+			temp_item_number,
+			customer_item_code,
+			item_e_name,
+			item_e_description,
+			item_specification,
+			item_unit,
+			purchase_number,
+			inquiry_min_order_number
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	cast( #{item.inquiryId} as uuid ),     	
+        	#{item.tempItemNumber},
+        	#{item.customerItemCode},    	
+        	#{item.itemEname},       
+        	#{item.itemEDescription},
+        	#{item.itemSpecification},
+        	#{item.itemUnit},        
+        	#{item.minOrderNumber},  
+        	#{item.purchaseNumber}
+       	)
+       	</foreach>
+    </insert>
+    
+    <insert id="insertQuoteItems" parameterType="java.util.List">
+        insert into quote_item
+        (
+	        id,
+			inquiry_item_id,
+			temp_item_number,
+			customer_item_code,
+			item_c_name,
+			item_c_description,
+			item_specification,
+			min_order_number,
+			price_term,
+			unit_price,
+			unit_fob_price,
+			quality_guarantee,
+			valid_period;
+			valid_date;
+			currency_id,
+			supplierName
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	cast( #{item.inquiryId} as uuid ),     	
+        	#{item.tempItemNumber},
+        	#{item.customerItemCode},    	
+        	#{item.itemEname},       
+        	#{item.itemEDescription},
+        	#{item.itemSpecification},
+        	#{item.itemUnit},        
+        	#{item.minOrderNumber},  
+        	#{item.purchaseNumber}
+       	)
+       	</foreach>
+    </insert>
+    
+    <update id="updateInquiries" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		inquiry
+    	set
+    		customer_name    =  #{item.customerName}    , 
+        	customer_buyer   =  #{item.customerBuyer}   ,
+    		inquiry_operator =  #{item.inquiryOperator} ,
+    		inquiry_date     =  #{item.inquiryDate}     ,
+    		pay_mode         =  #{item.payMode}         ,
+    		shipment_port    =  #{item.shipmentPort}    ,
+    		discharge_port   =  #{item.dischargePort}   ,
+			currency_id      =  #{item.currencyId}      ,
+			status           =  #{item.status}          ,
+			price_term       =  #{item.priceTerm}
+		where id = cast( #{item.id} as uuid )
+		</foreach>
+    </update>
+    
+     <update id="updateInquiryItems" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		inquiry_item
+    	set
+    		temp_item_number         =  #{item.tempItemNumber},   
+        	customer_item_code       =  #{item.customerItemCode}, 
+    		item_c_name              =  #{item.itemCName},     	 
+    		item_e_name              =  #{item.itemEname},        
+    		item_c_description       =  #{item.itemCDescription}, 
+    		item_e_description       =  #{item.itemEDescription}, 
+    		item_specification       =  #{item.itemSpecification},
+			item_unit                =  #{item.itemUnit"},        
+			purchase_number          =  #{item.minOrderNumber"},  
+			inquiry_min_order_number =  #{item.purchaseNumber"}   
+		where id = cast( #{item.id} as uuid )
+		</foreach>
+    </update>
+    
+    <select id="selectInquiries"   
+    		parameterType="InquirySearchParameters"     
+    		resultMap="inquiryMap">
+		select 
+			<include refid="inquiriesColumn"/>
+		from 
+			inquiry inquiry
+			left join 
+				inquiry_item inquiry_item
+				on 
+					inquiry.id = inquiry_item.inquiry_id
+			left join  
+				quote_item quote_item 
+				on 
+					quote_item.inquiry_item_id = inquiry_item.id
+		where
+			<include refid="inquiryMappingWhere"/>
+    </select> 
+    
+</mapper>  

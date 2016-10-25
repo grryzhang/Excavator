@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.MD.ItemDAO">  
+    
+    <resultMap type="Item" id="itemMap">
+		<result property="id"              column="id"               />
+    	<result property="name"            column="name"             />
+		<result property="eName"           column="e_name"           />
+		<result property="itemCode"        column="item_code"        />
+		<result property="itemType"        column="item_type"        />
+		<result property="specification"   column="specification"    />
+		<result property="lastUpdateTime"  column="last_update_time" />
+		<result property="imgs"            column="imgs" />
+		<collection property="prices" ofType="price" javaType="list">   
+            <id     property="id"                  column="price_id"/>
+			<result property="priceCategoryId"     column="price_category_id"    />
+			<result property="offerCorpId"         column="offer_corp_id"        />
+			<result property="supplierCorpId"      column="supplier_corp_id"     />
+			<result property="customerCorpId"      column="customer_corp_id"     />
+			<result property="price"               column="price"                />
+			<result property="currencyId"          column="currency_id"          />
+			<result property="offerTypeId"         column="offer_type_id"        />
+			<result property="unitId"              column="unit_id"              />
+			<result property="itemId"              column="item_id"              />
+			<result property="lastUpdateTime"      column="last_update_time"     />
+			<result property="dataSoure"           column="price_source"          />
+        </collection>
+    </resultMap> 
+    
+    <resultMap type="ItemPackageInfo" id="itemPackageInfoMap">
+		<result property="id"               column="id"               />
+		<result property="itemId"           column="item_id"          />
+    	<result property="packageNumber"    column="package_number"   />
+    	<result property="grossWeight"      column="gross_weight"     />
+		<result property="length"           column="length"           />
+		<result property="width"            column="width"            />
+		<result property="height"           column="height"           />
+		<result property="imgs"             column="imgs"             />
+    </resultMap>    
+
+    <resultMap type="ItemMapping" id="itemMappingMap">
+		<result property="id"              column="id"               />
+    	<result property="itemId"          column="item_id"          />
+    	<result property="itemCode"        column="item_code"        />
+		<result property="sourceId"        column="source_id"        />
+		<result property="dataSource"      column="data_source"      />
+    </resultMap>    
+    	
+	<resultMap type="ItemCategory" id="itemCategoryMap">
+		<result property="id"              column="id"             />
+    	<result property="name"            column="name"             />
+		<result property="ename"           column="e_name"           />
+		<result property="description"     column="description"      />
+		<result property="categoryGroup"   column="category_group"   />
+		<result property="level"           column="level"            />
+        <result property="parentId"        column="parent_id"        />
+        <result property="isLeaf"          column="is_leaf"          />
+        <result property="treeLeftValue"   column="tree_left_value"  />
+        <result property="treeRightValue"  column="tree_right_value" />
+        <result property="lastUpdateTime"  column="last_update_time" />
+        <result property="status"          column="status"           />
+    </resultMap>     
+    
+    <resultMap type="ItemCategoryMapping" id="itemCategoryMappingMap">
+    	<result property="id"             column="id"      />
+		<result property="categoryId"     column="category_id"  />
+		<result property="sourceId"       column="source_id"    />
+		<result property="dataSource"     column="data_source"  />
+		<result property="sourceParentId" column="source_parent_id"  />
+    </resultMap>  
+    
+    <resultMap type="ItemUnitMapping" id="itemUnitMappingMap">
+    	<result property="id"             column="id"      />
+		<result property="itemUnitId"     column="item_unit_id"  />
+		<result property="sourceId"       column="source_id"    />
+		<result property="dataSource"     column="data_source"  />
+    </resultMap> 
+    
+    <sql id="itemColumn">
+    	i.id, i.name,i.e_name,i.item_code,i.specification,
+    	i.item_type,
+    	i.last_update_time,
+    	i.imgs
+    </sql>
+    <sql id="itemPackageInfoColumn">
+    	ipi.id, ipi.package_number, ipi.gross_weight, 
+    	ipi.length, ipi.width, ipi.height,ipi.item_id,
+    	ipi.imgs
+    </sql>
+    <sql id="priceColumn">
+    	pl.id as price_id, 
+    	pl.price_category_id,pl.offer_corp_id,pl.customer_corp_id,
+    	pl.price, pl.currency_id, pl.offer_type_id, pl.unit_id,
+    	pl.item_id,
+    	pl.last_update_time,
+    	pl.price_source
+    </sql>
+    <sql id="corporationColumn">
+    	cor.id as corporation_id,
+    	cor.name as corporation_name,cor.short_name as corporation_short_name,cor.e_name as corporation_e_name,
+    	cor.area_id as corporation_area_id
+    </sql>
+    <sql id="itemMappingColumn">
+    	ii2s.id, ii2s.item_id, ii2s.source_id, ii2s.data_source
+    </sql>
+        <sql id="itemCategoryMappingColumn">
+    	iic2s.id,iic2s.category_id,iic2s.source_id,iic2s.source_parent_id,
+    	iic2s.data_source  
+    </sql>
+    <sql id="itemCategoryColumn">
+    	ic.id, ic.name,ic.e_name,ic.description,
+    	ic.category_group,ic.level,ic.parent_id,ic.is_leaf,ic.tree_left_value,ic.tree_right_value,ic.status,
+    	ic.last_update_time
+    </sql>
+    <sql id="itemUnitMappingColumn">
+    	iiu2s.id,iiu2s.item_unit_id,iiu2s.source_id,iiu2s.data_source  
+    </sql>
+    
+    
+    <sql id="itemWhere">
+   		select 
+			i.id
+		from 
+			items i
+		left join
+			(
+				select 
+					pl1.id, pl1.item_id,
+					pl1.customer_corp_id,pl1.offer_corp_id,pl2.offer_corp_id as supplier_corp_id 
+				from price_list pl1
+					inner join price_list pl2
+					on 
+					pl1.item_id = pl2.item_id 
+					and pl1.offer_corp_id = pl2.customer_corp_id
+			) pl
+				on pl.item_id = i.id
+		<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+		left join
+			inter_item_2_source ii2s
+				on ii2s.item_id = i.id 
+				and ii2s.source_id in 
+            	<foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            		#{item}  
+            	</foreach>
+		</if>
+       	<if test = "categoryIds != null and categoryIds.size() &gt; 0 ">
+       	left join
+       		inter_item_2_category ii2c
+       		on ii2c.item_id = i.id
+         	and ii2c.category_id in 
+         	<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            	cast( #{item} as uuid )
+            </foreach>
+        </if>
+		where
+    		i.id is not null
+    		and pl.id is not null
+    	<if test = "orderLevel != null">	
+			and ( i.manual_order &gt; #{orderLevel} or i.manual_order is null )
+		</if>
+    	<if test = "ids != null and ids.size() &gt; 0 ">
+            and i.id in 
+            <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+            	cast( #{item} as uuid )
+            </foreach>
+        </if>
+        <if test = "itemCode != null">
+        	and position( #{itemCode} in i.item_code ) > 0 
+        </if>
+        <if test = "itemType != null">
+        	and position( #{itemType} in i.item_type ) > 0 
+        </if>
+        <if test = "fuzzyQuerys != null and fuzzyQuerys.size() &gt; 0 ">
+        	and
+           	<foreach item="item" index="index" collection="fuzzyQuerys" open="(" separator=" and " close=")">  
+        		( 
+            		position( #{item} in i.item_type ) > 0 
+            		or
+					position( #{item} in i.e_name ) > 0 
+					or 
+					position( #{item} in i.name ) > 0 
+					or 
+					position( #{item} in i.item_code) > 0 
+					or 
+					position( #{item} in i.specification ) > 0 
+				)
+            </foreach>
+         </if>
+         <if test = "categoryIds != null and categoryIds.size() &gt; 0 ">
+            and ii2c.category_id in 
+         	<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            	cast( #{item} as uuid )
+            </foreach>
+         </if>
+         <if test = "priceListCustomerCorpId != null">
+			and pl.customer_corp_id = cast( #{priceListCustomerCorpId}  as uuid )
+		 </if>
+		 <if test = "customerCorpId != null">
+            and pl.customer_corp_id = cast( #{customerCorpId}   as uuid )
+         </if>
+         <if test = "supplierCorpIds != null">
+         	and pl.supplier_corp_id in 
+            <foreach item="item" index="index" collection="supplierCorpIds" open="(" separator="," close=")">  
+            	cast( #{item}   as uuid )
+            </foreach>
+         </if>
+         group by i.id, i.manual_order
+    </sql>
+    
+    <sql id="itemMappingWhere">
+    	ii2s.source_id is not null
+    	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+            and ii2s.source_id in 
+            <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+    </sql>
+    <sql id="itemCategoryWhere">
+    	select 
+			distinct( ic.id )
+		from 
+			item_categorys ic
+		<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+		left join
+		    inter_item_category_2_source iic2s
+		    on
+		    ic.id = iic2s.category_id
+		    and iic2s.source_id in 
+            <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+		</if>
+		where
+    		ic.id is not null
+    		<if test = "level != null">
+            	and ic.level = #{level}  
+        	</if>
+    </sql>
+    <sql id="itemCategoryMappingWhere">
+    	iic2s.source_id is not null
+    	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+            and iic2s.source_id in 
+            <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+    </sql>
+    <sql id="itemUnitMappingWhere">
+    	iiu2s.source_id is not null
+    	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+            and iiu2s.source_id in 
+            <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+    </sql>
+     <sql id="paging">
+    	<if test="limit != null and start != null">
+    		limit #{limit} offset #{start}
+    	</if>
+    </sql>
+
+	<insert id="insertItems" parameterType="java.util.List">
+        insert into items
+        (
+        	id,
+        	name,
+        	e_name,
+    		item_code,
+    		specification,
+    		item_type,
+    		last_update_time,
+    		imgs
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	#{item.name},
+        	#{item.eName},
+        	#{item.itemCode},
+        	#{item.specification},
+        	#{item.itemType},
+        	#{item.lastUpdateTime},
+        	#{item.imgs}
+       	)
+       	</foreach>
+    </insert>
+    
+    
+    <insert id="insertItemPackageInfos" parameterType="java.util.List">
+        insert into item_package_info
+        (
+        	id,
+        	item_id,
+  			package_number,
+ 			gross_weight,
+  			length,
+  			width,
+  			height
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	cast( #{item.itemId} as uuid ),
+        	#{item.packageNumber},
+        	#{item.grossWeight},
+        	#{item.length},
+        	#{item.width},
+        	#{item.height}
+       	)
+       	</foreach>
+    </insert>
+    
+    <insert id="insertInterItem2Category" parameterType="java.util.List">
+    	
+    	<foreach collection="list" item="item" index="index" separator=";" >
+    	insert into inter_item_2_category ( item_id, category_id )
+    	with ignore_conflict( a, b ) as (
+    		values
+    			( cast( #{item.itemId} as uuid ), cast( #{item.categoryId} as uuid ) )
+    	)
+    	select ic.* from ignore_conflict as ic where ic.a not in ( select item_id from inter_item_2_category ) 
+    	</foreach>
+    </insert>
+    
+    <update id="updateItems" parameterType="java.util.List">
+    
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		corporation
+    	set
+    		name                =  #{item.name},               
+        	e_name              =  #{item.eName},          
+    		item_code           =  #{item.itemCode}, 
+    		specification       =  #{item.specification}, 
+    		item_type       	=  #{item.itemType},           
+    		last_update_time    =  #{item.lastUpdateTime}
+		where id = cast( #{item.id} as uuid )
+		</foreach>
+		
+    </update>
+    
+    <insert id="insertItemMappings" parameterType="java.util.List">
+        insert into inter_item_2_source
+        (
+        	id,
+        	item_id,
+        	item_code,
+        	source_id,
+    		data_source
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	cast( #{item.itemId} as uuid ),
+        	#{item.itemCode},
+        	#{item.sourceId},
+        	#{item.dataSource}
+       	)
+       	</foreach>
+    </insert>
+
+	<insert id="insertItemCategory" parameterType="ItemCategory">
+		update 
+			item_categorys 
+		set 
+			tree_left_value = tree_left_value + 2
+		where 
+			tree_left_value &gt;= #{treeLeftValue};
+
+		update 
+			item_categorys 
+		set 
+			tree_right_value = tree_right_value + 2
+		where
+			tree_right_value &gt;= #{treeLeftValue};
+
+		insert into 
+			item_categorys
+			( 
+				id, name, e_name, description, level, parent_id, 
+			  	is_leaf, tree_left_value, tree_right_value, status, category_group 
+			)
+		values
+			( 	
+				cast( #{id} as uuid ), #{name}, #{ename}, #{description}, #{level}, cast( #{parentId} as uuid ), 
+				#{isLeaf}, #{treeLeftValue}, #{treeRightValue}, #{status}, #{categoryGroup} 
+			)
+	</insert>
+
+	<insert id="insertItemCategoryMapping" parameterType="ItemCategoryMapping">
+		insert into 
+			inter_item_category_2_source
+        	(
+        		id,
+        		category_id,
+        		source_id,
+        		source_parent_id,
+        		data_source
+        	)
+        values
+        	( 
+        		cast( #{id} as uuid ),
+        		cast( #{categoryId} as uuid ),
+        		#{sourceId},
+        		#{sourceParentId},
+        		#{dataSource}
+       		)
+	</insert>
+	
+	<update id="updateIsLeaf">
+    	update item_categorys 
+			set is_leaf = 'f'
+		where tree_right_value != tree_left_value + 1;
+		
+		update item_categorys 
+			set is_leaf = 't'
+		where tree_right_value = tree_left_value + 1
+    </update>
+    
+    <update id="updateItemCategory" parameterType="ItemCategory">
+    	update 
+    		item_categorys
+    	set
+    		name       = #{name},
+    		e_name     = #{ename}
+		where id = #{id}
+    </update>
+    
+    <select id="selectItems" 
+    		parameterType="ItemSearchParameters"   
+    		resultMap="itemMap">
+		select 
+			<include refid="itemColumn"/>
+			,
+			<include refid="priceColumn"/>
+		from 
+			items i
+		left join
+			(
+				select	
+					pl1.id , pl1.price_category_id,
+					pl1.offer_corp_id, pl1.customer_corp_id, pl1.price,
+					pl1.currency_id, pl1.offer_type_id, 
+					pl1.unit_id, pl1.item_id, pl1.last_update_time,
+					ip2s.data_source as price_source
+				from 
+					price_list pl1
+				left join
+					inter_price_2_source ip2s
+				on 
+					pl1.id = price_id
+				where 
+					pl1.price &gt; 0
+			) pl 
+				on pl.item_id = i.id 
+		where 
+			i.id in 
+			(
+				<include refid="itemWhere"/>
+				order by i.manual_order desc nulls last
+				<include refid="paging"/>
+			)
+		order by i.manual_order desc nulls last, i.item_code desc nulls last,  pl.price_source desc nulls last
+    </select> 
+    
+    <select id="countItems" 
+    		parameterType="ItemSearchParameters"   
+    		resultType="java.lang.Integer">
+		select 
+			count(*)
+		from 
+			items i
+		where 
+			i.id in 
+			(
+				<include refid="itemWhere"/>
+			)
+    </select>
+    
+    <select id="selectItemPackageInfos" 
+    		parameterType="ItemSearchParameters"   
+    		resultMap="itemPackageInfoMap">
+   	 	select 
+			<include refid="itemPackageInfoColumn"/>
+		from 
+			item_package_info ipi
+		where 
+			ipi.item_id in 
+			(
+				<include refid="itemWhere"/>
+				order by i.manual_order desc nulls last
+				<include refid="paging"/>
+			)
+    </select>
+    
+    <select id="selectItemMappings" 
+    		parameterType="ItemMappingSearchParameters"   
+    		resultMap="itemMappingMap">
+		select 
+			<include refid="itemMappingColumn"/>
+		from 
+			inter_item_2_source ii2s
+		left join
+			items i
+				on i.id = ii2s.item_id
+		where
+		<include refid="itemMappingWhere"/>
+    </select> 
+
+    <select id="selectItemCategorys" 
+    		parameterType="ItemCategorySearchParameters"   
+    		resultMap="itemCategoryMap">
+		select 
+			<include refid="itemCategoryColumn"/>
+		from 
+			item_categorys ic
+		where
+			ic.id in (
+				<include refid="itemCategoryWhere"/>
+			)
+    </select> 
+    
+    <select id="selectItemCategorysDeep" 
+    		parameterType="java.util.List"   
+    		resultMap="itemCategoryMap">
+		select 
+			<include refid="itemCategoryColumn"/>
+		from 
+			item_categorys ic
+		where
+			ic.id in (
+				select distinct(id) from
+				(
+				<foreach item="item" index="index" collection="categoryIds" separator="union all">  
+    					( 
+							select
+								ic.id
+							from
+								item_categorys ic 
+							where 
+								ic.status = 1 and 
+								ic.tree_left_value &gt;= (
+									select tree_left_value
+									from item_categorys
+									where id = cast( #{item} as uuid )
+								)
+								and ic.tree_right_value &lt;= (
+									select tree_right_value
+									from  item_categorys
+									where id = cast( #{item} as uuid )
+								)
+						)
+            	</foreach>
+            	) as result
+			)
+    </select> 
+    
+    <select id="selectItemCategorysAllParent" 
+    		parameterType="java.util.List"   
+    		resultMap="itemCategoryMap">
+		select 
+			<include refid="itemCategoryColumn"/>
+		from 
+			item_categorys ic
+		where
+			ic.id in (
+				select distinct(id) from
+				(
+				<foreach item="item" index="index" collection="categoryIds" separator="union all">  
+    					( 
+							select
+								ic.id
+							from
+								item_categorys ic 
+							where 
+								ic.status = 1 
+								and ic.level &gt; 0
+								and ic.tree_left_value &lt; (
+									select tree_left_value
+									from item_categorys
+									where id = cast( #{item} as uuid )
+								)
+								and ic.tree_right_value &gt;= (
+									select tree_right_value
+									from  item_categorys
+									where id = cast( #{item} as uuid )
+								)
+						)
+            	</foreach>
+            	) as result
+			)
+    </select>
+
+	<select id="selectItemCategoryIdsOfCorporations" 
+    		parameterType="java.util.List"   
+    		resultType="java.lang.String">
+		select 
+			distinct( ic.id )
+		from
+			corporation corp
+		inner join 
+			price_list pl
+			on pl.offer_corp_id = corp.id
+		left join 
+			items i
+			on i.id = pl.item_id
+		left join
+			inter_item_2_category ii2c
+			on ii2c.item_id = i.id
+		left join 
+			item_categorys ic
+			on ic.id = ii2c.category_id
+		where
+			pl.id is not null
+			and ic.id is not null
+			and 
+			corp.id in
+			<foreach item="item" index="index" collection="corporationIds" open="(" separator="," close=")">  
+            	cast( #{item} as uuid )
+            </foreach>
+	</select> 
+
+    <select id="selectItemCategorysMapping" 
+    		parameterType="ItemCategoryMappingSearchParameters"   
+    		resultMap="itemCategoryMappingMap">
+		select 
+			<include refid="itemCategoryMappingColumn"/>
+		from 
+		    inter_item_category_2_source iic2s
+		where
+		<include refid="itemCategoryMappingWhere"/>
+    </select> 
+    
+    <select id="selectItemUnitMappings" 
+    		parameterType="ItemUnitMappingSearchParameters"   
+    		resultMap="itemUnitMappingMap">
+		select 
+			<include refid="itemUnitMappingColumn"/>
+		from 
+			inter_item_unit_2_source iiu2s
+		where
+		<include refid="itemUnitMappingWhere"/>
+    </select> 
+</mapper>  

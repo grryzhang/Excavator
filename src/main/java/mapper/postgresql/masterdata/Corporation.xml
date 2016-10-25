@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.postgresql.MD.CorporationDAO">  
+
+	<cache flushInterval="360000" size="1024" readOnly="true"/> 
+
+    <resultMap type="Corporation" id="corporationMap">
+    	<result property="id"                 		column="id"                 		/>
+		<result property="name"                 	column="name"                   	/>
+		<result property="shortName"            	column="short_name"             	/>
+		<result property="eName"      				column="e_name"      				/>
+		<result property="areaId"               	column="area_id"          			/>
+		<result property="createTime"           	column="create_time"            	/>
+		<result property="lastUpdateTime"       	column="last_update_time"       	/>
+		<result property="lastUpdateUserId"     	column="last_update_user_id"    	/>
+		<result property="phone"     				column="phone"    					/>
+		<result property="contacts"     			column="contacts"    				/>
+		<result property="mail"     				column="mail"    					/>
+		<result property="imgs"     				column="imgs"    					/>
+		<result property="introduction"     		column="introduction"    			/>
+		<result property="certifications"     	    column="certifications"    		    />
+		<result property="managementCertifications" column="management_certifications"  />
+		<result property="resource"     	        column="resource"    		    	/>
+		<result property="website"     	        	column="website"    		    	/>
+		<result property="screenLevelId"     	    column="screen_level_id"    		/>
+    </resultMap>  
+    
+    <resultMap type="CorporationIntegrationMapping" id="corporationIntegrationMappingMap">
+    	<result property="id"                 	column="id"                 	/>
+		<result property="corporationId"       	column="corporation_id"         />
+		<result property="sourceId"            	column="source_id"              />
+		<result property="sourceCode"      		column="source_code"      		/>
+		<result property="dataSource"           column="data_source"            />
+    </resultMap>  
+    
+    <resultMap type="CorporationGrade" id="CorporationGradeMap">
+    	<id     property="gradeId"           column="grade_id"                   />
+    	<result property="id"        		 column="grade_sys_id"               />
+		<result property="corporationId"     column="grade_corporation_Id"       />
+		<result property="corporationGroup"  column="grade_corporation_group"    />
+		<result property="gradeScore"        column="grade_score"                />
+		<result property="gradeLevel"        column="grade_level"                />
+		<result property="createTime"        column="grade_create_time"          />
+		<association property="corporation" resultMap="corporationMap"> 
+		</association>
+		<collection property="gradeItems" resultMap="CorporationGradeItemMap">  
+        </collection>  
+    </resultMap>  
+    
+    <resultMap type="CorporationGradeItem" id="CorporationGradeItemMap">
+    	<result property="itemId"               column="item_id"           />
+		<result property="gradeId"              column="grade_id"          />
+		<result property="gradeItemId"          column="grade_item_id"     />
+		<result property="gradeItemScore"       column="grade_item_score"  />
+		<result property="gradeItemWeight"      column="grade_item_weight" />
+		<result property="gradeItemGroup"       column="grade_item_group"  />
+		<result property="gradeItem"            column="grade_item"        />
+    </resultMap>  
+    
+    <sql id="corporationColumn">
+    	cor.id,cor.name,cor.short_name,cor.e_name,
+    	cor.area_id,
+    	cor.create_time,cor.last_update_time,cor.last_update_user_id,
+    	cor.phone, cor.contacts, cor.mail,
+    	cor.imgs,
+    	cor.introduction,
+    	cor.certifications, cor.management_certifications,
+    	cor.resource, cor.website,
+    	cor.screen_level_id
+    </sql>
+    <sql id="corporationIntegrationMappingColumn">
+    	ic2s.id,
+        ic2s.corporation_id,
+        ic2s.source_id,
+        ic2s.source_code,
+        ic2s.data_source
+    </sql>
+    
+    <sql id="corporationGradeColumn">	
+		grade.id                  as grade_sys_id,
+		grade.corporation_id      as grade_corporation_Id,
+    	grade.corporation_group   as grade_corporation_group,
+    	grade.grade_id            as grade_id,
+    	grade.grade_score         as grade_score,
+		grade.grade_level         as grade_level,
+		grade.create_time         as grade_create_time,
+		grade_item.grade_item_id      as grade_item_id,
+		grade_item.grade_item_score   as grade_item_score,
+		grade_item.grade_item_weight  as grade_item_weight,
+		grade_item.grade_item_group   as grade_item_group,
+		grade_item.grade_item         as grade_item
+    </sql>
+    
+
+    <sql id="corporationWhere">
+    	select
+    		cor.id
+    	from 
+    		corporation cor
+    		<if test = "corporationGroups != null">
+    		left join corporation_grade cg
+    		on cg.corporation_id = cor.id
+    		</if>
+    		<if test = "itemCategoryIds != null">
+    		left join 
+				price_list pl
+				on pl.offer_corp_id = cor.id
+			left join 
+				items i
+				on i.id = pl.item_id
+			left join
+				inter_item_2_category ii2c
+				on ii2c.item_id = i.id
+			</if>
+		where 
+    		cor.id is not null
+    		<if test = "ids != null and ids.size() &gt; 0 ">
+            	and cor.id in 
+            	<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+            		cast( #{item} as uuid ) 
+            	</foreach>
+         	</if>
+         	<if test = "names != null and names.size() &gt; 0 ">
+            	and 
+            	<foreach item="item" index="index" collection="names" open="(" separator="or" close=")">  
+            		position( #{item} in cor.name  ) > 0 
+            	</foreach>
+         	</if>
+         	<if test = "enames != null and enames.size() &gt; 0 ">
+            	and 
+            	<foreach item="item" index="index" collection="enames" open="(" separator="or" close=")">  
+            		position( #{item} in cor.e_name  ) > 0 
+            	</foreach>
+         	</if>
+         	<if test = "corporationGroups != null and corporationGroups.size() &gt; 0 ">
+            	and cg.corporation_group in 
+            	<foreach item="item" index="index" collection="corporationGroups" open="(" separator="," close=")">  
+            		#{item}
+            	</foreach>
+         	</if>
+         	<if test = "itemCategoryIds != null and itemCategoryIds.size() &gt; 0 ">
+				and ii2c.category_id in
+				<foreach item="item" index="index" collection="itemCategoryIds" open="(" separator="," close=")">  
+            		cast( #{item} as uuid )
+            	</foreach>
+            </if>
+    	group by cor.id
+    </sql>
+    <sql id="corporationPaging">
+    	<if test="limit != null and start != null">
+    		limit #{limit} offset #{start}
+    	</if>
+    </sql>
+    
+    
+    <sql id="corporationIntegrationMappingWhere">
+    	ic2s.source_id is not null
+    	<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+            and ic2s.source_id in 
+            <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            	#{item}  
+            </foreach>
+         </if>
+    </sql>
+    
+    <sql id="itemWhere">
+   		select 
+			distinct(i.id)
+		from 
+			items i
+		<if test = "sourceIds != null and sourceIds.size() &gt; 0 ">
+		left join
+			inter_item_2_source ii2s
+				on ii2s.item_id = i.id 
+				and ii2s.source_id in 
+            	<foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">  
+            		#{item}  
+            	</foreach>
+		</if>
+		<if test = "priceListCustomerCorpId != null or customerCorpId != null">
+		left join
+			price_list pl
+				on pl.item_id = i.id
+				<if test = "priceListCustomerCorpId != null">
+					and pl.customer_corp_id = cast( #{priceListCustomerCorpId}  as uuid )
+				</if>
+				<if test = "customerCorpId != null">
+            		and pl.customer_corp_id = cast( #{customerCorpId}   as uuid )
+         		</if>
+        </if>
+       	<if test = "categoryIds != null and categoryIds.size() &gt; 0 ">
+       	left join
+       		inter_item_2_category ii2c
+       		on ii2c.item_id = i.id
+         	and ii2c.category_id in 
+         	<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            	cast( #{item} as uuid )
+            </foreach>
+        </if>
+		where
+    		i.id is not null
+    	<if test = "orderLevel != null">	
+			and ( i.manual_order &gt; #{orderLevel} or i.manual_order is null )
+		</if>
+    	<if test = "ids != null and ids.size() &gt; 0 ">
+            and i.id in 
+            <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+            	cast( #{item} as uuid )
+            </foreach>
+        </if>
+        <if test = "itemCode != null">
+        	and position( #{itemCode} in i.item_code ) > 0 
+        </if>
+        <if test = "fuzzyQuerys != null and fuzzyQuerys.size() &gt; 0 ">
+        	and
+           	<foreach item="item" index="index" collection="fuzzyQuerys" open="(" separator=" and " close=")">  
+        		( 
+            		position( #{item} in i.item_type ) > 0 
+            		or
+					position( #{item} in i.e_name ) > 0 
+					or 
+					position( #{item} in i.name ) > 0 
+					or 
+					position( #{item} in i.item_code) > 0 
+					or 
+					position( #{item} in i.specification ) > 0 
+				)
+            </foreach>
+         </if>
+         <if test = "categoryIds != null and categoryIds.size() &gt; 0 ">
+            and ii2c.category_id in 
+         	<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            	cast( #{item} as uuid )
+            </foreach>
+         </if>
+         <if test = "priceListCustomerCorpId != null">
+			and pl.customer_corp_id = cast( #{priceListCustomerCorpId}  as uuid )
+		 </if>
+		 <if test = "customerCorpId != null">
+            and pl.customer_corp_id = cast( #{customerCorpId}   as uuid )
+         </if>
+    </sql>
+    
+    <insert id="insertCorporation" parameterType="Corporation">
+    	<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id" >
+            select uuid_generate_v4()
+        </selectKey>  
+        insert into corporation
+        (
+        	id,
+        	name,
+        	short_name,
+        	e_name,
+    		area_id,
+    		create_time,
+    		last_update_time,
+    		last_update_user_id,
+    		phone,
+    		contacts,
+    		mail,
+    		imgs,
+    		introduction,
+    		certifications,
+    		management_certifications,
+    		resource,
+    		website,
+    		screen_level_id
+        )
+        values
+        ( 
+        	cast( #{id} as uuid ),
+        	#{name},
+        	#{shortName},
+        	#{eName},
+        	#{areaId},
+        	#{createTime},
+        	#{lastUpdateTime},
+        	#{lastUpdateUserId},
+        	#{phone},
+        	#{contacts},
+        	#{mail},
+        	cast( #{imgs} as json ),
+        	#{introduction},
+        	#{certifications},
+        	#{managementCertifications},
+        	#{resource},
+        	#{website},
+        	cast( #{screenLevelId} as uuid )
+       	)
+    </insert>
+    
+    <insert id="insertCorporations" parameterType="java.util.List">
+        insert into corporation
+        (
+        	id,
+        	name,
+        	short_name,
+        	e_name,
+    		area_id,
+    		create_time,
+    		last_update_time,
+    		last_update_user_id,
+    		phone,
+    		contacts,
+    		mail,
+			imgs,
+    		introduction,
+    		certifications,
+    		management_certifications,
+    		resource,
+    		website,
+    		screen_level_id
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	#{item.name},
+        	#{item.shortName},
+        	#{item.eName},
+        	#{item.areaId},
+        	#{item.createTime},
+        	#{item.lastUpdateTime},
+        	#{item.lastUpdateUserId},
+        	#{phone},
+        	#{contacts},
+        	#{mail},
+        	cast( #{imgs} as json ),
+        	#{introduction},
+        	#{certifications},
+        	#{managementCertifications},
+        	#{resource},
+        	#{website},
+        	cast( #{screenLevelId} as uuid )
+       	)
+       	</foreach>
+    </insert>
+    
+    <insert id="insertCorporationGrade" parameterType="java.util.List">
+    	insert into corporation_grade
+        (
+        	corporation_id,
+        	corporation_group,
+        	grade_id,
+        	grade_score,
+        	grade_level,
+        	create_time
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.corporationId} as uuid ),
+        	#{item.corporationGroup},
+        	#{item.gradeId},
+        	#{item.gradeScore},
+        	#{item.gradeLevel},
+        	#{item.createTime}
+       	)
+       	</foreach>
+    </insert>
+    
+    <insert id="insertCorporationGradeItem" parameterType="java.util.List">
+    	insert into corporation_grade_item
+        (
+        	grade_id,
+        	grade_item_id,
+        	grade_item_score,
+        	grade_item_weight,
+        	grade_item_group,
+        	grade_item
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	#{item.gradeId},
+        	#{item.gradeItemId},
+        	#{item.gradeItemScore},
+        	#{item.gradeItemWeight},
+        	#{item.gradeItemGroup},
+        	#{item.gradeItem}
+       	)
+       	</foreach>
+    </insert>
+    
+    <update id="updateCorporation" parameterType="Corporation">
+    	update 
+    		corporation
+    	set
+    		name                		=  #{name},           
+        	short_name          		=  #{shortName},      
+        	e_name              		=  #{eName},          
+    		area_id             		=  #{areaId},             
+    		last_update_time    		=  #{lastUpdateTime}, 
+    		last_update_user_id 		=  #{lastUpdateUserId},
+    		phone               		=  #{phone},
+        	contacts					=  #{contacts},
+        	mail						=  #{mail},
+        	imgs						=  cast( #{imgs} as json ),
+        	introduction				=  #{introduction},
+        	certifications				=  #{certifications},
+        	management_certifications	=  #{managementCertifications},
+        	resource					=  #{resource},
+        	website						=  #{website},
+        	screen_level_id				=  cast( #{screenLevelId} as uuid )
+		where id = cast( #{id} as uuid )
+    </update>
+    
+    <update id="updateCorporations" parameterType="java.util.List">
+    
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		corporation
+    	set
+    		name                		=  #{name},           
+        	short_name          		=  #{shortName},      
+        	e_name              		=  #{eName},          
+    		area_id             		=  #{areaId},             
+    		last_update_time    		=  #{lastUpdateTime}, 
+    		last_update_user_id 		=  #{lastUpdateUserId},
+    		phone               		=  #{phone},
+        	contacts					=  #{contacts},
+        	mail						=  #{mail},
+        	imgs						=  #{imgs},
+        	introduction				=  #{introduction},
+        	certifications				=  #{certifications},
+        	management_certifications	=  #{managementCertifications},
+        	resource					=  #{resource},
+        	website						=  #{website},
+        	screenLevelId				=  #{screenLevelId}
+		where id = cast( #{item.id} as uuid )
+		</foreach>
+		
+    </update>
+    
+    <delete id="deleteCorporation" parameterType="java.util.List"> 
+    	delete from 
+    		corporation
+		where id in 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        	cast( #{item} as uuid )
+        </foreach>
+    </delete>
+    
+    <insert id="insertCorporationIntegrationMapping" parameterType="CorporationIntegrationMapping">
+    	<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id" >
+            select uuid_generate_v4()
+        </selectKey>  
+        insert into inter_corporation_2_source
+        (
+        	id,
+        	corporation_id,
+        	source_id,
+        	source_code,
+        	data_source
+        )
+        values
+        ( 
+        	cast( #{id} as uuid ),
+        	cast( #{corporationId} as uuid ),
+        	#{sourceId},
+        	#{sourceCode},
+        	#{dataSource}
+       	)
+    </insert>
+
+    <insert id="insertCorporationIntegrationMappings" useGeneratedKeys="true" parameterType="java.util.List">  
+        insert into inter_corporation_2_source
+        (
+        	id,
+        	corporation_id,
+        	source_id,
+        	source_code,
+        	data_source
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        ( 
+        	cast( #{item.id} as uuid ),
+        	cast( #{item.corporationId} as uuid ),
+        	#{item.sourceId},
+        	#{item.sourceCode},
+        	#{item.dataSource}
+       	)
+        </foreach>  
+    </insert>  
+
+  	<update id="updateCorporationIntegrationMapping" parameterType="CorporationIntegrationMapping">
+    	update 
+    		inter_corporation_2_source
+    	set
+    		source_code         = #{sourceCode},
+        	data_source         = #{dataSource}
+		where source_id = #{sourceId}
+    </update>
+    
+    <update id="updateCorporationIntegrationMappings" parameterType="java.util.List">
+    
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		inter_corporation_2_source
+    	set
+    		source_code         = #{item.sourceCode},
+        	data_source         = #{item.dataSource}
+		where source_id = #{item.sourceId}
+		</foreach>
+		
+    </update>
+    
+    <update id="updateMappingsCorporationId" parameterType="java.util.List">
+    
+    	<foreach collection="list" item="item" index="index" separator=";" >  
+    	update 
+    		inter_corporation_2_source
+    	set
+    		corporation_id = cast( #{item.newCorporationId} as uuid )
+		where 
+			corporation_id = cast( #{item.oldCorporationId} as uuid )
+		</foreach>
+		
+    </update>
+    
+    <select id="countDuplicateNameCorporation" 
+    		parameterType="CorporationSearchParameters"  
+    		resultType="java.lang.Integer">
+    		
+    	select
+    		count(*)
+    	from 
+    		corporation cor
+    	left join (
+    		<include refid="corporationWhere"/>
+    	) cor1 on cor.id = cor1.id
+		where 
+			name in 
+				(select name  from  corporation  group  by  name  having  count(name) > 1)
+			and 
+			cor1.id != null
+    </select>  
+    
+    <select id="selectDuplicateNameCorporations" 
+    		parameterType="CorporationSearchParameters"  
+    		resultMap="corporationMap">
+    		
+    	select
+    		<include refid="corporationColumn"/>
+    	from 
+    		corporation cor
+    	left join (
+    		<include refid="corporationWhere"/>
+    	) cor1 on cor.id = cor1.id
+		where 
+			name in 
+				(select name  from  corporation  group  by  name  having  count(name) > 1)
+			and 
+			cor1.id != null
+		<include refid="corporationPaging"/>
+		order by name
+    </select>  
+    
+    <select id="selectCorporations" 
+    		parameterType="CorporationSearchParameters"  
+    		resultMap="corporationMap">
+    		
+    	select
+    		<include refid="corporationColumn"/>
+    	from 
+    		corporation cor
+    	where cor.id in (
+    		select distinct( cor.id ) from (
+    			<include refid="corporationWhere"/>
+    		) cor
+    		<include refid="corporationPaging"/>
+    	)
+    </select> 
+
+    <select id="countCorporations" 
+    		parameterType="CorporationSearchParameters"  
+    		resultType="java.lang.Long">
+    	select
+    		COUNT(DISTINCT cor.id)
+    	from 
+    		corporation cor
+    	left join (
+    		<include refid="corporationWhere"/>
+    	) cor1 on cor.id = cor1.id
+    	where cor1.id is not null
+    </select> 
+    
+    <select id="selectItemCorporations" 
+    		parameterType="ItemSearchParameters"  
+    		resultMap="corporationMap">
+    	select
+    		<include refid="corporationColumn"/>
+    	from 
+    		corporation cor
+    		left join price_list pl
+				on cor.id = pl.offer_corp_id
+			left join items i
+				on i.id = pl.item_id
+			where 
+				cor.area_id != ('内部客商')
+				and i.id in (
+					<include refid="itemWhere"/>
+				)
+		group by cor.id
+		<include refid="corporationPaging"/>
+    </select> 
+    
+    <select id="selectCorporationIntegrationMapping" 
+    		parameterType="CorporationIntegrationMappingSearchParameters"  
+    		resultMap="corporationIntegrationMappingMap">
+		select 
+			<include refid="corporationIntegrationMappingColumn"/>
+		from 
+		    inter_corporation_2_source ic2s
+		where 
+			<include refid="corporationIntegrationMappingWhere"/>
+    </select>  
+    
+    <select id="selectCorporationGrades"
+    		parameterType="CorporationSearchParameters"  
+    		resultMap="CorporationGradeMap">
+    		
+		select 
+			<include refid="corporationGradeColumn"/>
+			,
+			<include refid="corporationColumn"/>
+		from 
+    		corporation_grade grade
+			left join 
+    			corporation_grade_item grade_item
+        		on 
+            	grade.grade_id = grade_item.grade_id
+			inner join (
+    			<include refid="corporationWhere"/>
+    		) cor_filter on cor_filter.id = grade.corporation_id
+    		left join 
+    			corporation cor
+    			on cor.id = cor_filter.id
+    		where 
+    			cor.id is not null
+			order by 
+				grade.grade_score desc, 
+				grade_item.grade_item_score desc,
+				create_time desc, 
+				corporation_id, 
+				grade_item_id
+    </select>
+    
+    
+    <select id="selectLatestCorporationGrades"
+    		parameterType="CorporationSearchParameters"  
+    		resultMap="CorporationGradeMap">
+    		
+		select 
+			<include refid="corporationGradeColumn"/>
+			,
+			<include refid="corporationColumn"/>
+		from 
+    		corporation_grade grade
+			left join 
+    			corporation_grade_item grade_item
+        		on 
+            	grade.grade_id = grade_item.grade_id
+			left join 
+				corporation cor 
+    			on cor.id = grade.corporation_id
+    		left join (
+    			select 
+    				max( grade.grade_id ) as grade_id
+    			from 
+    				corporation_grade grade
+    			left join (
+    				<include refid="corporationWhere"/>
+    			) cor 
+    			on 
+    				cor.id = grade.corporation_id
+    			where cor.id is not null
+    			group by grade.corporation_id
+    		) maxGradeId
+    			on maxGradeId.grade_id = grade.grade_id
+    		where 
+    			cor.id is not null
+    			and maxGradeId.grade_id is not null
+			order by 
+				grade.grade_score desc, 
+				grade_item.grade_item_score desc,
+				create_time desc, 
+				corporation_id, 
+				grade_item_id
+    </select>
+    
+    <select id="selectCorporationGradesByItemCategoryIds"
+    		parameterType="java.util.List"  
+    		resultMap="CorporationGradeMap">
+    	select 
+			<include refid="corporationGradeColumn"/>,
+			<include refid="corporationColumn"/>
+		from
+			corporation_grade grade
+			inner join 
+				corporation_grade_item grade_item
+				on grade_item.grade_id = grade.grade_id
+		where 
+			grade.corporation_id in
+			(
+				select 
+					distinct( corp.id )
+				from
+					corporation corp
+				inner join 
+					price_list pl
+					on pl.supplier_corp_id = corp.id
+				left join 
+					items i
+					on i.id = pl.item_id
+				left join
+					inter_item_2_category ii2c
+					on ii2c.item_id = i.id
+				where 
+				ii2c.category_id in
+				<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            		cast( #{item} as uuid )
+            	</foreach>
+			)
+		order by 
+				grade.grade_score desc, 
+				grade_item.grade_item_score desc,
+				create_time desc, 
+				corporation_id, 
+				grade_item_id
+	</select>
+	
+	
+	<select id="selectCorporationStatistics" 
+			parameterType="CorporationStatisticsSearchParameters"
+			resultType="java.util.Map">
+	select 
+		CAST( count(result.parent_category_id ) as text ) as "sum",
+		CAST( result.parent_category_id as text ) as "categoryId",
+		result.resource as "resource"
+	from (
+		select cor.id,ii2c.category_id,icp.parent_category_id,cor.resource from 
+		    corporation cor
+		    left join price_list pl
+				on cor.id = pl.offer_corp_id
+			left join items i
+				on i.id = pl.item_id
+			left join inter_item_2_category ii2c
+				on ii2c.item_id = i.id
+			left join corporation_grade cg
+				on cg.corporation_id = cor.id
+			left join 
+				(select 
+					ic1.id as category_id, ic2.id as parent_category_id 
+				from item_categorys ic1
+					left join item_categorys ic2
+					on ic1.tree_left_value &gt;= ic2.tree_left_value
+					and ic1.tree_right_value &lt;= ic2.tree_right_value
+				where 
+				ic1.id in 
+				<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            		cast( #{item} as uuid ) 
+            	</foreach>
+				and ic2.level = 1
+				) icp
+				on icp.category_id = ii2c.category_id
+			where 
+				cor.resource is not null
+				<if test = "resources != null and resources.size() &gt; 0 ">
+					and cor.resource in
+            		<foreach item="item" index="index" collection="resources" open="(" separator="," close=")">  
+            			#{item}
+            		</foreach>
+            	</if>
+            	<if test = "categoryIds != null and categoryIds.size() &gt; 0 ">
+					and ii2c.category_id in
+            		<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            			cast( #{item} as uuid ) 
+            		</foreach>
+            	</if>
+            	<if test = "status != null and status == '2'.toString() ">
+					and ( i.manual_order > -1 or manual_order is null )
+            	</if>
+            	<if test = "status != null and status == '3'.toString() ">
+					and ( i.manual_order > -1 or manual_order is null )
+					and cg.id is not null
+            	</if>
+			group by cor.id, ii2c.category_id,cor.resource ,icp.parent_category_id
+		) as result
+		group by result.resource ,result.parent_category_id
+		order by  result.resource , result.parent_category_id
+	</select>
+	
+	<select id="selectScreenCorporation" 
+			parameterType="CorporationStatisticsSearchParameters"
+			resultMap="corporationMap">
+			
+		select
+			<include refid="corporationColumn"/>
+		    corporation cor
+		    left join price_list pl
+				on cor.id = pl.offer_corp_id
+			left join items i
+				on i.id = pl.item_id
+			left join inter_item_2_category ii2c
+				on ii2c.item_id = i.id
+			left join corporation_grade cg
+				on cg.corporation_id = cor.id
+			left join 
+				(select 
+					ic1.id as category_id, ic2.id as parent_category_id 
+				from item_categorys ic1
+					left join item_categorys ic2
+					on ic1.tree_left_value &gt;= ic2.tree_left_value
+					and ic1.tree_right_value &lt;= ic2.tree_right_value
+				where 
+				ic1.id in 
+				<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            		cast( #{item} as uuid ) 
+            	</foreach>
+				and ic2.level = 1
+				) icp
+				on icp.category_id = ii2c.category_id
+			where 
+				cor.resource is not null
+				<if test = "resources != null and resources.size() &gt; 0 ">
+					and cor.resource in
+            		<foreach item="item" index="index" collection="resources" open="(" separator="," close=")">  
+            			#{item}
+            		</foreach>
+            	</if>
+            	<if test = "categoryIds != null and categoryIds.size() &gt; 0 ">
+					and ii2c.category_id in
+            		<foreach item="item" index="index" collection="categoryIds" open="(" separator="," close=")">  
+            			cast( #{item} as uuid ) 
+            		</foreach>
+            	</if>
+            	<if test = "status != null and status == '2'.toString() ">
+					and ( i.manual_order > -1 or manual_order is null )
+            	</if>
+            	<if test = "status != null and status == '3'.toString() ">
+					and ( i.manual_order > -1 or manual_order is null )
+					and cg.id is not null
+            	</if>
+            <include refid="corporationPaging"/>
+	</select>
+	
+	<select id="selectAllCorporationSource" resultType="java.lang.String">
+	select 
+		cor.resource
+	from 
+		corporation cor
+	where 
+		cor.resource is not null
+		group by cor.resource
+		
+	</select>
+	
+</mapper>  

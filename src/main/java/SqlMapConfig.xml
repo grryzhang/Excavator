@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>  
+    <settings>  
+        <!-- 这个配置使全局的映射器启用或禁用缓存 -->  
+        <setting name="cacheEnabled" value="true" />  
+        <!-- 允许 JDBC 支持生成的键。需要适合的驱动。如果设置为 true 则这个设置强制生成的键被使用，尽管一些驱动拒绝兼容但仍然有效（比如Derby） -->  
+        <setting name="useGeneratedKeys" value="true" />  
+        <!-- 配置默认的执行器。SIMPLE 执行器没有什么特别之处。REUSE 执行器重用预处理语句。BATCH 执行器重用语句和批量更新  -->  
+        <setting name="defaultExecutorType" value="REUSE" />  
+        <!-- 全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。 -->  
+        <setting name="lazyLoadingEnabled" value="false"/>  
+        <!-- 设置超时时间，它决定驱动等待一个数据库响应的时间。  -->  
+        <setting name="defaultStatementTimeout" value="25000"/>   
+    </settings> 
+      
+    <!-- 别名配置。
+    	  在此配置的别名在其他Mapper配置文件中都可以直接使用alias的内容代替后面type那段长长的全路径说明 
+    	 这里的别名配置主要是各个javaBean的别名
+    -->  
+    <typeAliases>  
+    	<typeAlias alias="NC_Corporation"                type="com.zhongzhou.Excavator.model.NC.CorporationDoc" />
+    	<typeAlias alias="Corporation"                   type="com.zhongzhou.Excavator.model.masterdata.Corporation" />
+    	<typeAlias alias="CorporationSearchParameters"   type="com.zhongzhou.Excavator.model.masterdata.CorporationSearchParameters" />
+    	<typeAlias alias="CorporationIntegrationMapping" type ="com.zhongzhou.Excavator.model.masterdata.CorporationIntegrationMapping" />
+    	<typeAlias alias="CorporationIntegrationMappingSearchParameters" 
+    			   type ="com.zhongzhou.Excavator.model.masterdata.CorporationIntegrationMappingSearchParameters" />
+    	<typeAlias alias="CorporationStatisticsSearchParameters" 
+    			   type ="com.zhongzhou.Excavator.model.masterdata.CorporationStatisticsSearchParameters" />
+    			   
+   	    <typeAlias alias="CorporationGrade"                   type ="com.zhongzhou.Excavator.model.masterdata.CorporationGrade" />
+   	    <typeAlias alias="CorporationGradeItem"               type ="com.zhongzhou.Excavator.model.masterdata.CorporationGradeItem" />
+   	    <typeAlias alias="CorporationGradeSearchParameters"   type ="com.zhongzhou.Excavator.model.masterdata.CorporationGradeSearchParameters" />
+   	    
+   		<typeAlias alias="NC_SaleOrder"                     type="com.zhongzhou.Excavator.model.NC.SaleOrder" />
+   		<typeAlias alias="NC_SaleOrderSearchParameters"     type="com.zhongzhou.Excavator.model.NC.SaleOrderSearchParameters" />
+    			   
+    	<typeAlias alias="TOmSupplier"                   type ="com.zhongzhou.Excavator.model.EvaluationPlatform.TOmSupplier" />
+    	<typeAlias alias="TOmSupplierSearchParameters"   type ="com.zhongzhou.Excavator.model.EvaluationPlatform.TOmSupplierSearchParameters" />
+    	<typeAlias alias="TDimZtree"                     type ="com.zhongzhou.Excavator.model.EvaluationPlatform.TDimZtree" />		   
+    			   
+    			       	
+    	<typeAlias alias="NC_ItemCategory"                       type="com.zhongzhou.Excavator.model.NC.ItemCategory" />
+    	<typeAlias alias="NC_ItemCategorySearchParameters"       type="com.zhongzhou.Excavator.model.NC.ItemCategorySearchParameters" />
+    	<typeAlias alias="ItemCategory"                		     type="com.zhongzhou.Excavator.model.masterdata.ItemCategory" />
+    	<typeAlias alias="ItemCategorySearchParameters"          type="com.zhongzhou.Excavator.model.masterdata.ItemCategorySearchParameters" />
+    	<typeAlias alias="ItemCategoryMapping"                   type="com.zhongzhou.Excavator.model.masterdata.ItemCategoryMapping" />
+    	<typeAlias alias="ItemCategoryMappingSearchParameters"   type="com.zhongzhou.Excavator.model.masterdata.ItemCategoryMappingSearchParameters" />
+    	
+    	<typeAlias alias="NC_Item"                      		type="com.zhongzhou.Excavator.model.NC.Item" />
+    	<typeAlias alias="NC_ItemSearchParameters"      		type="com.zhongzhou.Excavator.model.NC.ItemSearchParameters" />
+    	<typeAlias alias="Item"                         		type="com.zhongzhou.Excavator.model.masterdata.Item" />
+    	<typeAlias alias="ItemPackageInfo"                      type="com.zhongzhou.Excavator.model.masterdata.ItemPackageInfo" />
+    	<typeAlias alias="ItemSearchParameters"         		type="com.zhongzhou.Excavator.model.masterdata.ItemSearchParameters" />
+    	<typeAlias alias="ItemMapping"                  		type="com.zhongzhou.Excavator.model.masterdata.ItemMapping" />
+    	<typeAlias alias="ItemMappingSearchParameters"          type="com.zhongzhou.Excavator.model.masterdata.ItemMappingSearchParameters" />
+    	<typeAlias alias="ItemUnit"             		        type="com.zhongzhou.Excavator.model.masterdata.ItemUnit"                          />
+    	<typeAlias alias="ItemUnitMapping"                      type="com.zhongzhou.Excavator.model.masterdata.ItemUnitMapping"                   />
+    	<typeAlias alias="ItemUnitMappingSearchParameters"      type="com.zhongzhou.Excavator.model.masterdata.ItemUnitMappingSearchParameters"   />
+    	
+    	<typeAlias alias="InterItem2Category"       type="com.zhongzhou.Excavator.model.masterdata.InterItem2Category"   />
+    	
+    	<typeAlias alias="NC_Unit"                     type="com.zhongzhou.Excavator.model.NC.Unit" />
+    	
+    	<typeAlias alias="NC_ItemManage"                     type="com.zhongzhou.Excavator.model.NC.ItemManage" />
+    	<typeAlias alias="NC_ItemManageSearchParameter"      type="com.zhongzhou.Excavator.model.NC.ItemManageSearchParameter" />
+    	
+    	<typeAlias alias="NC_Currency"                     type="com.zhongzhou.Excavator.model.NC.Currency" />
+    	<typeAlias alias="NC_CurrencyRate"                 type="com.zhongzhou.Excavator.model.NC.CurrencyRate" />
+    	
+    	<typeAlias alias="NC_Price"          		     		type="com.zhongzhou.Excavator.model.NC.Price"                        />
+    	<typeAlias alias="NC_PriceSearchParameters"      		type="com.zhongzhou.Excavator.model.NC.PriceSearchParameters"        />
+    	<typeAlias alias="NC_PriceCategory"              		type="com.zhongzhou.Excavator.model.NC.PriceCategory" 			     />
+    	<typeAlias alias="Price"             		     		type="com.zhongzhou.Excavator.model.masterdata.Price" 					         />
+    	<typeAlias alias="PriceMapping"                  		type="com.zhongzhou.Excavator.model.masterdata.PriceMapping" 				     />
+    	<typeAlias alias="PriceMappingSearchParameters"  		type="com.zhongzhou.Excavator.model.masterdata.PriceMappingSearchParameters" 	 />
+    	<typeAlias alias="PriceCategory"                        type="com.zhongzhou.Excavator.model.masterdata.PriceCategory" 			         />
+    	<typeAlias alias="PriceCategoryMapping"                 type="com.zhongzhou.Excavator.model.masterdata.PriceCategoryMapping"            />
+    	<typeAlias alias="PriceCategoryMappingSearchParameters" type="com.zhongzhou.Excavator.model.masterdata.PriceCategoryMapping"            />
+    	
+    	
+    	<typeAlias alias="WebSourcePrice"                 type="com.zhongzhou.Excavator.model.masterdata.WebSourcePrice"      />
+    	
+    	<typeAlias alias="Currency"             		        type="com.zhongzhou.Excavator.model.masterdata.Currency"                          />
+    	<typeAlias alias="CurrencyMapping"                      type="com.zhongzhou.Excavator.model.masterdata.CurrencyMapping"                   />
+    	<typeAlias alias="CurrencyMappingSearchParameters"      type="com.zhongzhou.Excavator.model.masterdata.CurrencyMappingSearchParameters"   />
+    	
+    	<typeAlias alias="Inquiry"           			type="com.zhongzhou.Excavator.model.masterdata.Inquiry"      				/>
+    	<typeAlias alias="InquiryItem"       			type="com.zhongzhou.Excavator.model.masterdata.InquiryItem"  				/>
+    	<typeAlias alias="InquirySearchParameters"      type="com.zhongzhou.Excavator.model.masterdata.InquirySearchParameters"  	/>
+    	<typeAlias alias="QuoteItem"         			type="com.zhongzhou.Excavator.model.masterdata.QuoteItem"    				/>
+    </typeAliases> 
+ 
+      
+    <!-- 指定映射器路径 -->  
+    <!-- mapper 目录下记录了所有的sql语句的配置, 对应的类似SysUser.xml就是存储了对应于sys_user这张表的sql语句 -->
+    <mappers>  
+    	<mapper resource="mapper/oracle/NC/Corporation.xml" />
+    	<mapper resource="mapper/oracle/NC/Item.xml" />
+    	<mapper resource="mapper/oracle/NC/Unit.xml" />
+    	<mapper resource="mapper/oracle/NC/Price.xml" />
+    	<mapper resource="mapper/oracle/NC/SaleOrder.xml" />
+    	<mapper resource="mapper/oracle/NC/Currency.xml" />
+    	
+    	<mapper resource="mapper/oracle/EvaluationPlatform/Supplier.xml" />
+    	
+    	<mapper resource="mapper/postgresql/masterdata/Corporation.xml"     />    
+    	<mapper resource="mapper/postgresql/masterdata/Item.xml"            />
+    	<mapper resource="mapper/postgresql/masterdata/Price.xml"           />
+    	<mapper resource="mapper/postgresql/masterdata/Currency.xml"        />
+    	<mapper resource="mapper/postgresql/masterdata/WebSourcePrice.xml"  />
+    	<mapper resource="mapper/postgresql/masterdata/Inquiry.xml"  />
+    	
+    	<mapper resource="mapper/MSSQL/FUTONG/Inquiry.xml"  />
+    </mappers>  
+</configuration>   

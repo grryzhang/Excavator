@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+  
+<mapper namespace="com.zhongzhou.Excavator.DAO.oracle.NC.SaleOrderDAO">  
+   <resultMap type="NC_SaleOrder" id="ncSaleOrderMap">
+    	<result property="BCOOPTOPO"              column="BCOOPTOPO"            />  
+		<result property="BFREECUSTFLAG"          column="BFREECUSTFLAG"        />  
+		<result property="BINITFLAG"              column="BINITFLAG"            />  
+		<result property="BINVOICENDFLAG"         column="BINVOICENDFLAG"       />  
+		<result property="BOUTENDFLAG"            column="BOUTENDFLAG"          />  
+		<result property="BOVERDATE"              column="BOVERDATE"            />  
+		<result property="BPAYENDFLAG"            column="BPAYENDFLAG"          />  
+		<result property="BPOCOOPTOME"            column="BPOCOOPTOME"          />  
+		<result property="BRECEIPTENDFLAG"        column="BRECEIPTENDFLAG"      />  
+		<result property="BRETINVFLAG"            column="BRETINVFLAG"          />  
+		<result property="BTRANSENDFLAG"          column="BTRANSENDFLAG"        />  
+		<result property="CAPPROVEID"             column="CAPPROVEID"           />  
+		<result property="CBALTYPEID"             column="CBALTYPEID"           />  
+		<result property="CBIZTYPE"               column="CBIZTYPE"             />  
+		<result property="CCALBODYID"             column="CCALBODYID"           />  
+		<result property="CCOOPPOHID"             column="CCOOPPOHID"           />  
+		<result property="CCREDITNUM"             column="CCREDITNUM"           />  
+		<result property="CCUSTBANKID"            column="CCUSTBANKID"          />  
+		<result property="CCUSTOMERID"            column="CCUSTOMERID"          />  
+		<result property="CDEPTID"                column="CDEPTID"              />  
+		<result property="CEMPLOYEEID"            column="CEMPLOYEEID"          />  
+		<result property="CFREECUSTID"            column="CFREECUSTID"          />  
+		<result property="COPERATORID"            column="COPERATORID"          />  
+		<result property="CRECEIPTAREAID"         column="CRECEIPTAREAID"       />  
+		<result property="CRECEIPTCORPID"         column="CRECEIPTCORPID"       />  
+		<result property="CRECEIPTCUSTOMERID"     column="CRECEIPTCUSTOMERID"   />  
+		<result property="CRECEIPTTYPE"           column="CRECEIPTTYPE"         />  
+		<result property="CSALECORPID"            column="CSALECORPID"          />  
+		<result property="CSALEID"                column="CSALEID"              />  
+		<result property="CTERMPROTOCOLID"        column="CTERMPROTOCOLID"      />  
+		<result property="CTRANSMODEID"           column="CTRANSMODEID"         />  
+		<result property="CWAREHOUSEID"           column="CWAREHOUSEID"         />  
+		<result property="DAPPROVEDATE"           column="DAPPROVEDATE"         />  
+		<result property="DAUDITTIME"             column="DAUDITTIME"           />  
+		<result property="DBILLDATE"              column="DBILLDATE"            />  
+		<result property="DBILLTIME"              column="DBILLTIME"            />  
+		<result property="DMAKEDATE"              column="DMAKEDATE"            />  
+		<result property="DMODITIME"              column="DMODITIME"            />  
+		<result property="DR"                     column="DR"                   />  
+		<result property="EDITAUTHOR"             column="EDITAUTHOR"           />  
+		<result property="EDITDATE"               column="EDITDATE"             />  
+		<result property="EDITIONNUM"             column="EDITIONNUM"           />  
+		<result property="FINVOICECLASS"          column="FINVOICECLASS"        />  
+		<result property="FINVOICETYPE"           column="FINVOICETYPE"         />  
+		<result property="FSTATUS"                column="FSTATUS"              />  
+		<result property="IBALANCEFLAG"           column="IBALANCEFLAG"         />  
+		<result property="IPRINTCOUNT"            column="IPRINTCOUNT"          />  
+		<result property="NACCOUNTPERIOD"         column="NACCOUNTPERIOD"       />  
+		<result property="NDISCOUNTRATE"          column="NDISCOUNTRATE"        />  
+		<result property="NEVALUATECARRIAGE"      column="NEVALUATECARRIAGE"    />  
+		<result property="NHEADSUMMNY"            column="NHEADSUMMNY"          />  
+		<result property="NPRECEIVEMNY"           column="NPRECEIVEMNY"         />  
+		<result property="NPRECEIVERATE"          column="NPRECEIVERATE"        />  
+		<result property="NSUBSCRIPTION"          column="NSUBSCRIPTION"        />  
+		<result property="PK_CORP"                column="PK_CORP"              />  
+		<result property="PK_DEFDOC1"             column="PK_DEFDOC1"           />  
+		<result property="PK_DEFDOC10"            column="PK_DEFDOC10"          />  
+		<result property="PK_DEFDOC11"            column="PK_DEFDOC11"          />  
+		<result property="PK_DEFDOC12"            column="PK_DEFDOC12"          />  
+		<result property="PK_DEFDOC13"            column="PK_DEFDOC13"          />  
+		<result property="PK_DEFDOC14"            column="PK_DEFDOC14"          />  
+		<result property="PK_DEFDOC15"            column="PK_DEFDOC15"          />  
+		<result property="PK_DEFDOC16"            column="PK_DEFDOC16"          />  
+		<result property="PK_DEFDOC17"            column="PK_DEFDOC17"          />  
+		<result property="PK_DEFDOC18"            column="PK_DEFDOC18"          />  
+		<result property="PK_DEFDOC19"            column="PK_DEFDOC19"          />  
+		<result property="PK_DEFDOC2"             column="PK_DEFDOC2"           />  
+		<result property="PK_DEFDOC20"            column="PK_DEFDOC20"          />  
+		<result property="PK_DEFDOC3"             column="PK_DEFDOC3"           />  
+		<result property="PK_DEFDOC4"             column="PK_DEFDOC4"           />  
+		<result property="PK_DEFDOC5"             column="PK_DEFDOC5"           />  
+		<result property="PK_DEFDOC6"             column="PK_DEFDOC6"           />  
+		<result property="PK_DEFDOC7"             column="PK_DEFDOC7"           />  
+		<result property="PK_DEFDOC8"             column="PK_DEFDOC8"           />  
+		<result property="PK_DEFDOC9"             column="PK_DEFDOC9"           />  
+		<result property="TS"                     column="TS"                   />  
+		<result property="VACCOUNTYEAR"           column="VACCOUNTYEAR"         />  
+		<result property="VDEF1"                  column="VDEF1"                />  
+		<result property="VDEF10"                 column="VDEF10"               />  
+		<result property="VDEF11"                 column="VDEF11"               />  
+		<result property="VDEF12"                 column="VDEF12"               />  
+		<result property="VDEF13"                 column="VDEF13"               />  
+		<result property="VDEF14"                 column="VDEF14"               />  
+		<result property="VDEF15"                 column="VDEF15"               />  
+		<result property="VDEF16"                 column="VDEF16"               />  
+		<result property="VDEF17"                 column="VDEF17"               />  
+		<result property="VDEF18"                 column="VDEF18"               />  
+		<result property="VDEF19"                 column="VDEF19"               />  
+		<result property="VDEF2"                  column="VDEF2"                />  
+		<result property="VDEF20"                 column="VDEF20"               />  
+		<result property="VDEF3"                  column="VDEF3"                />  
+		<result property="VDEF4"                  column="VDEF4"                />  
+		<result property="VDEF5"                  column="VDEF5"                />  
+		<result property="VDEF6"                  column="VDEF6"                />  
+		<result property="VDEF7"                  column="VDEF7"                />  
+		<result property="VDEF8"                  column="VDEF8"                />  
+		<result property="VDEF9"                  column="VDEF9"                />  
+		<result property="VEDITREASON"            column="VEDITREASON"          />  
+		<result property="VNOTE"                  column="VNOTE"                />  
+		<result property="VRECEIPTCODE"           column="VRECEIPTCODE"         />  
+		<result property="VRECEIVEADDRESS"        column="VRECEIVEADDRESS"      /> 
+    </resultMap> 
+    
+    <sql id="ncSaleOrderColumn">
+    	so.BCOOPTOPO,so.BFREECUSTFLAG,so.BINITFLAG,so.BINVOICENDFLAG,so.BOUTENDFLAG,so.BOVERDATE,
+    	so.BPAYENDFLAG,so.BPOCOOPTOME,so.BRECEIPTENDFLAG,so.BRETINVFLAG,so.BTRANSENDFLAG,
+    	so.CAPPROVEID,so.CBALTYPEID,so.CBIZTYPE,so.CCALBODYID,so.CCOOPPOHID,so.CCREDITNUM,
+    	so.CCUSTBANKID,so.CCUSTOMERID,so.CDEPTID,so.CEMPLOYEEID,so.CFREECUSTID,so.COPERATORID,
+    	so.CRECEIPTAREAID,so.CRECEIPTCORPID,so.CRECEIPTCUSTOMERID,so.CRECEIPTTYPE,so.CSALECORPID,
+    	so.CSALEID,so.CTERMPROTOCOLID,so.CTRANSMODEID,so.CWAREHOUSEID,so.DAPPROVEDATE,so.DAUDITTIME,
+    	so.DBILLDATE,so.DBILLTIME,so.DMAKEDATE,so.DMODITIME,so.DR,so.EDITAUTHOR,so.EDITDATE,so.EDITIONNUM,
+    	so.FINVOICECLASS,so.FINVOICETYPE,so.FSTATUS,so.IBALANCEFLAG,so.IPRINTCOUNT,so.NACCOUNTPERIOD,
+    	so.NDISCOUNTRATE,so.NEVALUATECARRIAGE,so.NHEADSUMMNY,so.NPRECEIVEMNY,so.NPRECEIVERATE,
+    	so.NSUBSCRIPTION,so.PK_CORP,so.PK_DEFDOC1,so.PK_DEFDOC10,so.PK_DEFDOC11,so.PK_DEFDOC12,
+    	so.PK_DEFDOC13,so.PK_DEFDOC14,so.PK_DEFDOC15,so.PK_DEFDOC16,so.PK_DEFDOC17,
+    	so.PK_DEFDOC18,so.PK_DEFDOC19,so.PK_DEFDOC2,so.PK_DEFDOC20,so.PK_DEFDOC3,
+    	so.PK_DEFDOC4,so.PK_DEFDOC5,so.PK_DEFDOC6,so.PK_DEFDOC7,so.PK_DEFDOC8,so.PK_DEFDOC9,
+    	so.TS,so.VACCOUNTYEAR,so.VDEF1,so.VDEF10,so.VDEF11,so.VDEF12,so.VDEF13,so.VDEF14,
+    	so.VDEF15,so.VDEF16,so.VDEF17,so.VDEF18,so.VDEF19,so.VDEF2,so.VDEF20,so.VDEF3,
+    	so.VDEF4,so.VDEF5,so.VDEF6,so.VDEF7,so.VDEF8,so.VDEF9,so.VEDITREASON,so.VNOTE,
+    	so.VRECEIPTCODE,so.VRECEIVEADDRESS
+    </sql>
+	
+    <sql id="ncSaleOrderWhere">
+    	so.vreceiptcode is not null
+    	<if test = "vreceiptcodeLike != null ">
+    		and so.vreceiptcode like #{vreceiptcodeLike}
+    	</if>
+    	<if test = "vdef1 != null ">
+    		and so.vdef1 = #{vdef1}
+    	</if>
+    </sql>
+    <sql id="ncSaleOrderOrderBy">
+    	<if test = "orderbys != null and orderbys.size() &gt; 0 ">
+    		order by
+            <foreach item="item" index="index" collection="orderbys" separator=",">  
+            	${item.name}
+            	<if test = "item.isDesc == true"> desc</if>
+            	<if test = "item.isDesc == false"> asc</if>
+            </foreach>
+        </if>
+    </sql>
+    
+    <select id="selectSaleOrders"
+    		parameterType="NC_SaleOrderSearchParameters"  
+    		resultMap="ncSaleOrderMap">
+		select 
+			<include refid="ncSaleOrderColumn"/>
+		from 
+    		so_sale so
+    	where
+    		<include refid="ncSaleOrderWhere"/>
+    		<include refid="ncSaleOrderOrderBy"/>
+    </select>
+    
+    <select id="selectSaleOrdersWithRowNumber"
+    		parameterType="NC_SaleOrderSearchParameters"  
+    		resultMap="ncSaleOrderMap">
+		SELECT * 
+		FROM 
+			( 
+				SELECT 
+					result.*, ROWNUM RN 
+				FROM 
+					(
+						select 
+							<include refid="ncSaleOrderColumn"/>
+						from 
+    						so_sale so
+    					where
+    						<include refid="ncSaleOrderWhere"/>
+    						<include refid="ncSaleOrderOrderBy"/>
+					) result 
+					WHERE ROWNUM &lt;= ${end} 
+			) 
+		WHERE RN &gt;= ${start}
+    </select>
+</mapper>  
