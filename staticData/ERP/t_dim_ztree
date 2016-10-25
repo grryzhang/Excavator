@@ -1,6 +1,0 @@
-
--- 在ztree下建立一个 NC供应商分类，用来保存和选择从NC同步过来的供应商
-insert into t_dim_ztree 
-( FNUMBER, FNAME, FPARENTNO, FPARENTNAME, FLEVEL, FISLEAF, FTYPE, FID, FTYPE_LANG )
-values
-( '9907' , 'NC供应商', '0', '供应商', '1', '0','[1]供应商', '00a7ee5b5c734fea86a14d3914e79907','[1]Supplier' );
